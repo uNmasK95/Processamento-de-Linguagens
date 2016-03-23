@@ -16,21 +16,43 @@ int numeroNomesAutores[100];
 %x author
 %%
 
-author[ ]*=[ ]*[\"] 										{printf("Estou\n");numeroAutores=0;tot=0;n=0; BEGIN(author);}
+author[ ]*=[ ]*[\"] 										{numeroAutores=0;tot=0;n=0; BEGIN(author);}
 <author>[A-Za-z\\\.'\{\}\~]+\"?[A-Za-z\\\.'\{\}\~]+			{a[tot]=strdup(yytext);n++;tot++;}
 <author>" and "												{numeroNomesAutores[numeroAutores]=n;numeroAutores++;n=0;}					
 <author>,													{numeroNomesAutores[numeroAutores]=n;numeroAutores++;n=0;}
 <author>\",													{BEGIN(INITIAL);
+																char** aux = a;
+																char* autor; 
 																int i,j,f=numeroNomesAutores[0];
-																for(i=0,j=0;i<tot;i++){
+																
+																for(i=0; i<=numeroAutores;i++){
+																	if(numeroAutores==0){
+																			printf("\tauthor = {%c. %s},\n",aux[0][0],aux[numeroNomesAutores[i]-1]);
+																		}else{
+																			if(i==0){
+																				printf("\tauthor = {%c. %s, ",aux[0][0],aux[numeroNomesAutores[i]-1]);
+																			}else{
+																				if(i==numeroAutores-1){
+																					printf("%c. %s and ",aux[0][0],aux[numeroNomesAutores[i]-1]);
+																					}else{
+																						if(i==numeroAutores){
+																							printf("%c. %s},\n",aux[0][0],aux[numeroNomesAutores[i]]);
+																							}else{
+																								printf("%c. %s, ",aux[0][0],aux[numeroNomesAutores[i]-1]);
+																							}
+																					}
+																			}
+																			//printf("Nn=%d\n",numeroNomesAutores[i]);
+																			aux=aux+numeroNomesAutores[i];
+																		}
 																	
-																	printf("%s_", a[i]);
-																	if(i==f-1){
-																		f+=numeroNomesAutores[j];
-																		j++;
-																		printf("\n");
-																	}
+																	
 																}
+																/*
+																for(i=0;i<tot;i++){
+																	printf("%s\n",a[i]);
+																}*/
+									
 															}
 <author>.|\n 												{;}
 .|\n 	{;}

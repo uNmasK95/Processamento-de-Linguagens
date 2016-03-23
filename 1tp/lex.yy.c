@@ -748,7 +748,7 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 19 "tp2.l"
-{printf("Estou\n");numeroAutores=0;tot=0;n=0; BEGIN(author);}
+{numeroAutores=0;tot=0;n=0; BEGIN(author);}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
@@ -769,37 +769,58 @@ case 5:
 YY_RULE_SETUP
 #line 23 "tp2.l"
 {BEGIN(INITIAL);
+																char** aux = a;
+																char* autor; 
 																int i,j,f=numeroNomesAutores[0];
-																for(i=0,j=0;i<tot;i++){
-																	printf("%s_", a[i]);
-																	if(i==f-1){
-																		f+=numeroNomesAutores[j];
-																		j++;
-																		printf("\n");
-																	}
-																	
 																
+																for(i=0; i<=numeroAutores;i++){
+																	if(numeroAutores==0){
+																			printf("\tauthor = {%c. %s},\n",aux[0][0],aux[numeroNomesAutores[i]-1]);
+																		}else{
+																			if(i==0){
+																				printf("\tauthor = {%c. %s, ",aux[0][0],aux[numeroNomesAutores[i]-1]);
+																			}else{
+																				if(i==numeroAutores-1){
+																					printf("%c. %s and ",aux[0][0],aux[numeroNomesAutores[i]-1]);
+																					}else{
+																						if(i==numeroAutores){
+																							printf("%c. %s},\n",aux[0][0],aux[numeroNomesAutores[i]]);
+																							}else{
+																								printf("%c. %s, ",aux[0][0],aux[numeroNomesAutores[i]-1]);
+																							}
+																					}
+																			}
+																			//printf("Nn=%d\n",numeroNomesAutores[i]);
+																			aux=aux+numeroNomesAutores[i];
+																		}
+																	
+																	
 																}
+																/*
+																for(i=0;i<tot;i++){
+																	printf("%s\n",a[i]);
+																}*/
+									
 															}
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 36 "tp2.l"
+#line 57 "tp2.l"
 {;}
 	YY_BREAK
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 37 "tp2.l"
+#line 58 "tp2.l"
 {;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 38 "tp2.l"
+#line 59 "tp2.l"
 ECHO;
 	YY_BREAK
-#line 803 "lex.yy.c"
+#line 824 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(author):
 	yyterminate();
@@ -1797,7 +1818,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 38 "tp2.l"
+#line 59 "tp2.l"
 
 
 
