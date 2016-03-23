@@ -1,53 +1,47 @@
 %{
 #include <stdio.h>
 #include <string.h>
-char*  nomes[30];
-int cont[30];
 
-void addRegisto(char* nome){
-	int found=0;
-	int i;
-	for(i=0;i<30 && nomes[i]!=NULL && found==0;i++){
-		if(!strcmp(nomes[i],nome)){
-			found=1;
-			cont[i]++;
-		}
-	}
-	if(nomes[i]==NULL && found==0){
-		nomes[i] = strdup(nome);
-		cont[i]++;
-	}
-}
 
+char* a[500]; 
+int n=0;
+int tot=0;
+int numeroAutores=0;
+int numeroNomesAutores[100];
 %}
 
-%%
-^@[A-Za-z]+ {addRegisto(yytext+1);}
-.|\n 	{;}
 
+
+
+%x author
 %%
+
+author[ ]*=[ ]*[\"] 										{printf("Estou\n");numeroAutores=0;tot=0;n=0; BEGIN(author);}
+<author>[A-Za-z\\\.'\{\}\~]+\"?[A-Za-z\\\.'\{\}\~]+			{a[tot]=strdup(yytext);n++;tot++;}
+<author>" and "												{numeroNomesAutores[numeroAutores]=n;numeroAutores++;n=0;}					
+<author>,													{numeroNomesAutores[numeroAutores]=n;numeroAutores++;n=0;}
+<author>\",													{BEGIN(INITIAL);
+																int i,j,f=numeroNomesAutores[0];
+																for(i=0,j=0;i<tot;i++){
+																	
+																	printf("%s_", a[i]);
+																	if(i==f-1){
+																		f+=numeroNomesAutores[j];
+																		j++;
+																		printf("\n");
+																	}
+																}
+															}
+<author>.|\n 												{;}
+.|\n 	{;}
+%%
+
 int yywrap() {return 1;}
 int main(){
-	//
-	for(int i=0;i<30;i++){
-		nomes[i]=NULL;
-		cont[i]=0;
-	}
 	printf("Vou começar\n");
 	yylex();
-
-	FILE* fp =fopen("teste.html","w");
-
-	fprintf(fp, "<html>\n<head>\n<title>EXERCICIO 1</title></head><body>\n <h2>Lista Exercico 1</h2>\n<ul>\n");
-
-	for(int i=0;i<30 && nomes[i]!=NULL ;i++){
-
-		fprintf(fp, "<li> %s -> %d </li>\n", nomes[i],cont[i]);
-	}
-	
-	fprintf(fp, "</ul>\n</html>\n");
-	printf("Acabei a lista\n");
-	fclose(fp);
+	printf("Acabei \n");
 
 	return 0;
 }
+
