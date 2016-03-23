@@ -8,37 +8,41 @@ int n=0;
 int tot=0;
 int numeroAutores=0;
 int numeroNomesAutores[100];
+char lixo[5000];
+int bool=0;
+
+int titleBOOL=0;
 %}
 
 
 
 
-%x author
+%x author categoria title
 %%
 
-author[ ]*=[ ]*[\"] 										{numeroAutores=0;tot=0;n=0; BEGIN(author);}
+
 <author>[A-Za-z\\\.'\{\}\~]+\"?[A-Za-z\\\.'\{\}\~]+			{a[tot]=strdup(yytext);n++;tot++;}
 <author>" and "												{numeroNomesAutores[numeroAutores]=n;numeroAutores++;n=0;}					
 <author>,													{numeroNomesAutores[numeroAutores]=n;numeroAutores++;n=0;}
-<author>\",													{BEGIN(INITIAL);
+<author>\",													{BEGIN(categoria);
 																char** aux = a;
 																char* autor; 
 																int i,j,f=numeroNomesAutores[0];
 																
 																for(i=0; i<=numeroAutores;i++){
 																	if(numeroAutores==0){
-																			printf("\tauthor = {%c. %s},\n",aux[0][0],aux[numeroNomesAutores[i]-1]);
+																			printf("author = {%c. %s},\n",aux[0][0],aux[numeroNomesAutores[i]-1]);
 																		}else{
 																			if(i==0){
-																				printf("\tauthor = {%c. %s, ",aux[0][0],aux[numeroNomesAutores[i]-1]);
+																				printf("author = {%c. %s,\n",aux[0][0],aux[numeroNomesAutores[i]-1]);
 																			}else{
 																				if(i==numeroAutores-1){
-																					printf("%c. %s and ",aux[0][0],aux[numeroNomesAutores[i]-1]);
+																					printf("    %c. %s and\n",aux[0][0],aux[numeroNomesAutores[i]-1]);
 																					}else{
 																						if(i==numeroAutores){
-																							printf("%c. %s},\n",aux[0][0],aux[numeroNomesAutores[i]]);
+																							printf("    %c. %s},\n",aux[0][0],aux[numeroNomesAutores[i]]);
 																							}else{
-																								printf("%c. %s, ",aux[0][0],aux[numeroNomesAutores[i]-1]);
+																								printf("    %c. %s,\n",aux[0][0],aux[numeroNomesAutores[i]-1]);
 																							}
 																					}
 																			}
@@ -54,15 +58,38 @@ author[ ]*=[ ]*[\"] 										{numeroAutores=0;tot=0;n=0; BEGIN(author);}
 																}*/
 									
 															}
-<author>.|\n 												{;}
-.|\n 	{;}
+@[A-Za-z]+\{[A-Za-z0-9]+,									{BEGIN(categoria); printf("%s\n",yytext);tot=0;titleBOOL=0;}
+<categoria>author[ ]*=[ ]*[\"] 								{numeroAutores=0;tot=0;n=0; BEGIN(author);}
+<categoria>title[ ]*=[ ]*[\"]								{BEGIN(title); printf("    title = {");}
+<categoria>\}\n 											{BEGIN(INITIAL);printf("}\n");}
+<title>.*\",? 												{if(yytext[strlen(yytext)-1]==','){
+																yytext[strlen(yytext)-2]='}';
+																} else{
+																	yytext[strlen(yytext)-1]='}';
+																}
+																printf("%s",yytext); titleBOOL=1; BEGIN(categoria);
+															}
+<categoria>[ ]*=[ ]*\"										{printf(" = {");}
+<categoria>\",												{printf("},");}
+<categoria>\"\n												{printf("}\n");}
+<categoria>.|\n 											{if(titleBOOL && tot>=1 ){
+																if(!bool){
+																	printf("%s%s",lixo,yytext);
+																	bool=1;
+																	}else{
+																		printf("%s",yytext);
+																		} 
+															 }else{
+															 	strcat(lixo,yytext);
+															 	} 
+															}
+\n 															{printf("%s",yytext);}
 %%
 
 int yywrap() {return 1;}
 int main(){
-	printf("Vou começar\n");
+
 	yylex();
-	printf("Acabei \n");
 
 	return 0;
 }
