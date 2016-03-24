@@ -1,7 +1,10 @@
 %{
 #include <stdio.h>
 #include <string.h>
-
+#include <graphviz\gvc.h>
+#include <graphviz\cdt.h>
+#include <graphviz\graph.h>
+#include <graphviz\pathplan.h>
 
 char* a[500]; 
 int n=0;
@@ -72,6 +75,11 @@ int main(){
 	fp = fopen("graf.dot","a+");
 	fprintf(fp,"}");
 	fclose(fp);
+
+
+
+
+
 
 
 	return 0;

@@ -484,7 +484,10 @@ char *yytext;
 #line 2 "tp3.l"
 #include <stdio.h>
 #include <string.h>
-
+#include <graphviz\gvc.h>
+#include <graphviz\cdt.h>
+#include <graphviz\graph.h>
+#include <graphviz\pathplan.h>
 
 char* a[500]; 
 int n=0;
@@ -495,7 +498,7 @@ int bool=0;
 char* new[1000];
 
 
-#line 499 "lex.yy.c"
+#line 502 "lex.yy.c"
 
 #define INITIAL 0
 #define author 1
@@ -679,11 +682,11 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 20 "tp3.l"
+#line 23 "tp3.l"
 
 
 
-#line 687 "lex.yy.c"
+#line 690 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -768,22 +771,22 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 23 "tp3.l"
+#line 26 "tp3.l"
 {a[tot]=strdup(yytext);n++;tot++;printf("%s\n",yytext);}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 24 "tp3.l"
+#line 27 "tp3.l"
 {numeroNomesAutores[numeroAutores]=n;numeroAutores++;n=0;}					
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 25 "tp3.l"
+#line 28 "tp3.l"
 {numeroNomesAutores[numeroAutores]=n;numeroAutores++;n=0;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 26 "tp3.l"
+#line 29 "tp3.l"
 {
 																numeroNomesAutores[numeroAutores]=n;n=0;
 																BEGIN(categoria);
@@ -817,38 +820,38 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 56 "tp3.l"
+#line 59 "tp3.l"
 {BEGIN(categoria);tot=0;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 57 "tp3.l"
+#line 60 "tp3.l"
 {numeroAutores=0;tot=0;n=0; BEGIN(author);}
 	YY_BREAK
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 58 "tp3.l"
+#line 61 "tp3.l"
 {;}
 	YY_BREAK
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 59 "tp3.l"
+#line 62 "tp3.l"
 {BEGIN(INITIAL);}
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 60 "tp3.l"
+#line 63 "tp3.l"
 {;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 61 "tp3.l"
+#line 64 "tp3.l"
 ECHO;
 	YY_BREAK
-#line 852 "lex.yy.c"
+#line 855 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(author):
 case YY_STATE_EOF(categoria):
@@ -1847,7 +1850,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 61 "tp3.l"
+#line 64 "tp3.l"
 
 
 
@@ -1863,6 +1866,11 @@ int main(){
 	fp = fopen("graf.dot","a+");
 	fprintf(fp,"}");
 	fclose(fp);
+
+
+
+
+
 
 
 	return 0;
