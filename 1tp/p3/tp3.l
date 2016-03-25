@@ -28,49 +28,55 @@ char* authorProcura;
 %%
 
 
-<author>[A-Za-z\\\.'\{\}\~]+\"?[A-Za-z\\\.'\{\}\~]+			{a[tot]=strdup(yytext);n++;tot++;}
-<author>" and "												{numeroNomesAutores[numeroAutores]=n;numeroAutores++;n=0;}					
-<author>[ ]													{;}
-<author>[ ]*,[ ]*													{numeroNomesAutores[numeroAutores]=n;numeroAutores++;n=0;}
-<author>[ ]*\",													{
-																numeroNomesAutores[numeroAutores]=n;n=0;
-																BEGIN(categoria);
-																char** aux = a;
-																char* autor; 
+<author>[A-Za-z(\\\")\\\.'\{\}\~\-\´\`]+\"?[A-Za-z\\\.'\{\}\~\-\´\`]+		{
+															printf("TESTE:%s\n",yytext);
+															a[tot]=strdup(yytext);
+															n++;tot++;
+														}
+<author>[ ]+"and"[ ]*\n?[ ]*											{
+															numeroNomesAutores[numeroAutores]=n;
+															numeroAutores++;
+															n=0;
+														}					
+<author>[ ]												{;}
+<author>[ ]*,[ ]*										{numeroNomesAutores[numeroAutores]=n;numeroAutores++;n=0;}
+<author>[ ]*\",											{
+															BEGIN(categoria);
+															int i,j;
+															char** aux = a;
+															char buf[100];
 
-																
-																FILE* fp = fopen("graf.dot","a+");
+															numeroNomesAutores[numeroAutores]=n;
+															n=0;
+															FILE* fp = fopen("graf.dot","a+");
 
-																char buf[100];
-																int i,j,f=numeroNomesAutores[0];
-
-																for(i=0; i<=numeroAutores;i++){
-																	sprintf(buf,"%c. %s",aux[0][0],aux[numeroNomesAutores[i]-1]);
-																	new[i]=strdup(buf);																	
-																	aux=aux+numeroNomesAutores[i];
-																}
-
-																for(i=0;i<=numeroAutores;i++){
-																	for(j=0;j<=numeroAutores;j++){
-																		if(i!=j){
-																			sprintf(buf,"\t\"%s\" -- \"%s\";\n",new[i],new[j]);
-																			fprintf(fp,"%s",buf);
-
-																			if(!strcmp(new[i],authorProcura)){
-																				authorParceria[nParceiros]=strdup(new[j]);
-																				nParceiros++;
-																			}
-																		}
-
-																	}
-																}
-																fclose(fp);
+															for(i=0; i<=numeroAutores;i++){
+																sprintf(buf,"%c. %s",aux[0][0],aux[numeroNomesAutores[i]-1]);
+																new[i]=strdup(buf);																	
+																aux=aux+numeroNomesAutores[i];
 															}
+
+															for(i=0;i<=numeroAutores;i++){
+																for(j=0;j<=numeroAutores;j++){
+																	if(i!=j){
+																		fprintf(fp,"\t\"%s\" -- \"%s\";\n",new[i],new[j]);
+
+																		if(!strcmp(new[i],authorProcura)){
+																			authorParceria[nParceiros]=strdup(new[j]);
+																			nParceiros++;
+																		}
+																	}
+
+																}
+															}
+															fclose(fp);
+														}
 @[A-Za-z]+\{[A-Za-z0-9]+,[ ]*									{BEGIN(categoria);tot=0;}
 <categoria>author[ ]*=[ ]*[\"] 								{numeroAutores=0;tot=0;n=0; BEGIN(author);}
 <categoria>.|\n												{;}
 <categoria>\}\n 											{BEGIN(INITIAL);}
 .|\n 														{;}
+#<author>\n 														{;}
 %%
 
 int yywrap() {return 1;}
