@@ -28,18 +28,33 @@ char* authorProcura;
 %%
 
 
-<author>[A-Za-z(\\\")\\\.'\{\}\~\-\´\`]+\"?[A-Za-z\\\.'\{\}\~\-\´\`]+		{
+<author>[A-Za-z(\\\")/\\\.'\{\}\~\-\´\`]+\"?[A-Za-z/\\\.'\{\}\~\-\´\`]+		{
 															printf("TESTE:%s\n",yytext);
 															a[tot]=strdup(yytext);
 															n++;tot++;
 														}
-<author>[ ]+"and"[ ]*\n?[ ]*											{
+<author>[ ]+"and"[ ]+									{
 															numeroNomesAutores[numeroAutores]=n;
 															numeroAutores++;
 															n=0;
-														}					
+														}			
+<author>[ ]+"and"[ ]*\n?[ ]*							{
+															numeroNomesAutores[numeroAutores]=n;
+															numeroAutores++;
+															n=0;
+														}	
+<author>[ ]*\n[ ]*"and"[ ]+								{
+															numeroNomesAutores[numeroAutores]=n;
+															numeroAutores++;
+															n=0;
+														}
+
+<author>[ ]*,[ ]*										{
+															numeroNomesAutores[numeroAutores]=n;
+															numeroAutores++;
+															n=0;
+														}
 <author>[ ]												{;}
-<author>[ ]*,[ ]*										{numeroNomesAutores[numeroAutores]=n;numeroAutores++;n=0;}
 <author>[ ]*\",											{
 															BEGIN(categoria);
 															int i,j;
@@ -71,14 +86,19 @@ char* authorProcura;
 															}
 															fclose(fp);
 														}
-@[A-Za-z]+\{[A-Za-z0-9]+,[ ]*									{BEGIN(categoria);tot=0;}
-<categoria>author[ ]*=[ ]*[\"] 								{numeroAutores=0;tot=0;n=0; BEGIN(author);}
-<categoria>.|\n												{;}
-<categoria>\}\n 											{BEGIN(INITIAL);}
-.|\n 														{;}
-#<author>\n 														{;}
-%%
+@[A-Za-z]+\{[A-Za-z0-9]+,[ ]*							{BEGIN(categoria);tot=0;}
+<categoria>author[ ]*=[ ]*[\"] 							{
+															numeroAutores=0;
+															tot=0;
+															n=0; 
+															BEGIN(author);
+														}
+<categoria>.|\n											{;}
+<categoria>\}\n 										{BEGIN(INITIAL);}
+.|\n 													{;}
+#<author>\n 											{;}
 
+%%
 int yywrap() {return 1;}
 int main(int argc, char** argv){
 
