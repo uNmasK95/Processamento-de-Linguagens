@@ -22,7 +22,7 @@ void addRegisto(char* nome){
 %}
 
 %%
-^@[A-Za-z]+ {addRegisto(yytext+1);}
+^[ ]*@[A-Za-z]+ {addRegisto(yytext+1);}
 .|\n 	{;}
 
 %%
