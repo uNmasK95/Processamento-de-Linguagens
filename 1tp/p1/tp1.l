@@ -20,9 +20,10 @@ void addRegisto(char* nome){
 }
 
 %}
-
+%x reservada
 %%
-^[ ]*@[A-Za-z]+ {addRegisto(yytext+1);}
+^[ ]*@		{BEGIN(reservada);}
+<reservada>[A-Za-z]+  {addRegisto(yytext);BEGIN(INITIAL);}
 .|\n 	{;}
 
 %%
@@ -36,7 +37,7 @@ int main(){
 	printf("Vou começar\n");
 	yylex();
 
-	FILE* fp =fopen("teste.html","w");
+	FILE* fp =fopen("Exercico_1.html","w");
 
 	fprintf(fp, "<html>\n<head>\n<title>EXERCICIO 1</title></head><body>\n <h2>Lista Exercico 1</h2>\n<ul>\n");
 
