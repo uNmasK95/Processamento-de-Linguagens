@@ -25,17 +25,17 @@ char* authorProcura;
 
 %%
 
-<author>[ ]+"and"[ ]+							{
+<author>[ ]+[Aa][Nn][Dd][ ]+							{
 										numeroNomesAutores[numeroAutores]=n;
 										numeroAutores++;
 										n=0;
 									}			
-<author>[ ]+"and"[ ]*\n?[ ]*						{
+<author>[ ]+[Aa][Nn][Dd][ ]*\n?[ ]*						{
 										numeroNomesAutores[numeroAutores]=n;
 										numeroAutores++;
 										n=0;
 									}	
-<author>[ ]*\n[ ]*"and"[ ]+						{
+<author>[ ]*\n[ ]*[Aa][Nn][Dd][ ]+						{
 										numeroNomesAutores[numeroAutores]=n;
 										numeroAutores++;
 										n=0;
@@ -45,16 +45,20 @@ char* authorProcura;
 										numeroAutores++;
 										n=0;
 									}
-<author>(\",)				{
+<author>[\"\}][,\n]				{
 						BEGIN(categoria);
 						int i,j;
 						char** aux = a;
 						char buf[100];
 						numeroNomesAutores[numeroAutores]=n;
-						n=0;
 						FILE* fp = fopen("graf.dot","a+");
 						for(i=0; i<=numeroAutores;i++){
-							sprintf(buf,"%c. %s",aux[0][0],aux[numeroNomesAutores[i]-1]);
+							printf("%d\n",numeroNomesAutores[i]);
+							if(numeroNomesAutores[i]==1){
+								sprintf(buf,"%s",aux[0]);
+							}else{
+								sprintf(buf,"%c. %s",aux[0][0],aux[numeroNomesAutores[i]-1]);
+							}
 							new[i]=strdup(buf);					
 							aux=aux+numeroNomesAutores[i];
 						}
@@ -72,18 +76,21 @@ char* authorProcura;
 							}
 						}
 						fclose(fp);
+						n=0;
 														}
 
-<author>[^ ,]+[^ \",(\",)]						{	
+<author>[^ ,\n]*[^ \",(\",)\n]						{	
+										printf("TESTE:%s\n",yytext);
 										a[tot]=strdup(yytext);
 										n++;tot++;
 									}
 <author>[ ]								{;}
+<author>\n								{;}
 @[A-Za-z]+\{[A-Za-z0-9]+,[ ]*						{
 										BEGIN(categoria);
 										tot=0;
 									}
-<categoria>author[ ]*=[ ]*[\"] 						{
+<categoria>[Aa][Uu][Tt][Hh][Oo][Rr][ ]*=[ ]*[\"\{]  			{
 										numeroAutores=0;
 										tot=0;
 										n=0; 
@@ -92,7 +99,6 @@ char* authorProcura;
 <categoria>.|\n								{;}
 <categoria>\}\n 							{BEGIN(INITIAL);}
 .|\n 									{;}
-#<author>\n 								{;}
 
 %%
 int yywrap() {return 1;}
