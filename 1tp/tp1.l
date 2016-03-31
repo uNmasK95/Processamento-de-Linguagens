@@ -23,7 +23,7 @@ void addRegisto(char* nome){
 %x reservada
 %%
 ^[ ]*@		{BEGIN(reservada);}
-<reservada>[A-Za-z]+  {addRegisto(yytext);BEGIN(INITIAL);}
+<reservada>[A-Za-z]+  {addRegisto(toLowerCase(yytext));BEGIN(INITIAL);}
 .|\n 	{;}
 
 %%
@@ -34,20 +34,18 @@ int main(){
 		nomes[i]=NULL;
 		cont[i]=0;
 	}
-	printf("Vou começar\n");
 	yylex();
 
-	FILE* fp =fopen("Exercico_1.html","w");
+	FILE* fp =fopen("index.html","w");
 
-	fprintf(fp, "<html>\n<head>\n<title>EXERCICIO 1</title></head><body>\n <h2>Lista Exercico 1</h2>\n<ul>\n");
+	fprintf(fp, "<html>\n\t<head>\n\t\t<title>EXERCICIO 1</title>\n\t</head>\n\t<body>\n \t\t<h2>Lista Exercico 1</h2>\n\t\t\t<ul>\n");
 
 	for(int i=0;i<30 && nomes[i]!=NULL ;i++){
 
-		fprintf(fp, "<li> %s -> %d </li>\n", nomes[i],cont[i]);
+		fprintf(fp, "\t\t\t<li> %s -> %d </li>\n", nomes[i],cont[i]);
 	}
 	
-	fprintf(fp, "</ul>\n</html>\n");
-	printf("Acabei a lista\n");
+	fprintf(fp, "\t\t\t</ul>\n\t</body>\n</html>\n");
 	fclose(fp);
 
 	return 0;
