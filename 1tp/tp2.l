@@ -94,7 +94,7 @@ void registaAuthors(){
 											n++;tot++;
 										}
 
-<author>[ ]*[\"\}],						{
+<author>[ ]*[\"\}],?					{
 											BEGIN(categoria);
 											registaAuthors();
 										}
@@ -121,7 +121,7 @@ void registaAuthors(){
 															titleBOOL=1;
 														}
 
-<title>[^=]*\".? 		{	
+<title>[^=]*\",? 		{	
 								BEGIN(categoria);
 								if(yytext[strlen(yytext)-1]==','){
 									yytext[strlen(yytext)-2]='}';

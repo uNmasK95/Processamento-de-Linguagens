@@ -19,86 +19,95 @@ int nParceiros=0;
 char* authorParceria[100];
 char* authorProcura;
 
+
+void registaAuthors(){
+	int i,j;
+	char** aux = a;
+	char buf[100];
+	numeroNomesAutores[numeroAutores]=n;
+	FILE* fp = fopen("graf.dot","a+");
+	for(i=0; i<=numeroAutores;i++){
+		printf("%d\n",numeroNomesAutores[i]);
+		if(numeroNomesAutores[i]==1){
+			sprintf(buf,"%s",aux[0]);
+		}else{
+			sprintf(buf,"%c. %s",aux[0][0],aux[numeroNomesAutores[i]-1]);
+		}
+		new[i]=strdup(buf);					
+		aux=aux+numeroNomesAutores[i];
+	}
+	for(i=0;i<=numeroAutores;i++){
+		for(j=0;j<=numeroAutores;j++){
+			if(i!=j){
+				fprintf(fp,"\t\"%s\" -- \"%s\";\n",new[i],new[j]);
+
+				if(!strcmp(new[i],authorProcura)){
+					authorParceria[nParceiros]=strdup(new[j]);
+					nParceiros++;
+				}
+			}
+
+		}
+	}
+	fclose(fp);
+	n=0;
+}
+
+
 %}
 
 %x author categoria graf
 
 %%
-
-<author>[ ]+[Aa][Nn][Dd][ ]+							{
-										numeroNomesAutores[numeroAutores]=n;
-										numeroAutores++;
-										n=0;
-									}			
-<author>[ ]+[Aa][Nn][Dd][ ]*\n?[ ]*						{
-										numeroNomesAutores[numeroAutores]=n;
-										numeroAutores++;
-										n=0;
-									}	
-<author>[ ]*\n[ ]*[Aa][Nn][Dd][ ]+						{
-										numeroNomesAutores[numeroAutores]=n;
-										numeroAutores++;
-										n=0;
-									}
-<author>,								{	
-										numeroNomesAutores[numeroAutores]=n;
-										numeroAutores++;
-										n=0;
-									}
-<author>[\"\}][,\n]				{
-						BEGIN(categoria);
-						int i,j;
-						char** aux = a;
-						char buf[100];
-						numeroNomesAutores[numeroAutores]=n;
-						FILE* fp = fopen("graf.dot","a+");
-						for(i=0; i<=numeroAutores;i++){
-							printf("%d\n",numeroNomesAutores[i]);
-							if(numeroNomesAutores[i]==1){
-								sprintf(buf,"%s",aux[0]);
-							}else{
-								sprintf(buf,"%c. %s",aux[0][0],aux[numeroNomesAutores[i]-1]);
-							}
-							new[i]=strdup(buf);					
-							aux=aux+numeroNomesAutores[i];
-						}
-						for(i=0;i<=numeroAutores;i++){
-							for(j=0;j<=numeroAutores;j++){
-								if(i!=j){
-									fprintf(fp,"\t\"%s\" -- \"%s\";\n",new[i],new[j]);
-
-									if(!strcmp(new[i],authorProcura)){
-										authorParceria[nParceiros]=strdup(new[j]);
-										nParceiros++;
-									}
-								}
-
-							}
-						}
-						fclose(fp);
-						n=0;
-														}
-
-<author>[^ ,\n]*[^ \",(\",)\n]						{	
-										printf("TESTE:%s\n",yytext);
-										a[tot]=strdup(yytext);
-										n++;tot++;
-									}
-<author>[ ]								{;}
-<author>\n								{;}
-@[A-Za-z]+\{[A-Za-z0-9]+,[ ]*						{
+@[A-Za-z]+\{[A-Za-z0-9:\+]+,		{
 										BEGIN(categoria);
 										tot=0;
 									}
-<categoria>[Aa][Uu][Tt][Hh][Oo][Rr][ ]*=[ ]*[\"\{]  			{
-										numeroAutores=0;
-										tot=0;
-										n=0; 
+
+<categoria>[Aa][Uu][Tt][Hh][Oo][Rr][ \t]*=[ \t]*[\"\{]  {
 										BEGIN(author);
+										numeroAutores=0;
+										tot=0;n=0; 
 									}
-<categoria>.|\n								{;}
-<categoria>\}\n 							{BEGIN(INITIAL);}
-.|\n 									{;}
+
+<author>[ ]+[Aa][Nn][Dd][ ]+			{
+											numeroNomesAutores[numeroAutores]=n;
+											numeroAutores++;
+											n=0;
+										}			
+<author>[ ]+[Aa][Nn][Dd][ ]*\n?[ ]*		{
+											numeroNomesAutores[numeroAutores]=n;
+											numeroAutores++;
+											n=0;
+										}	
+<author>[ ]*\n[ ]*[Aa][Nn][Dd][ ]+		{
+											numeroNomesAutores[numeroAutores]=n;
+											numeroAutores++;
+											n=0;
+										}
+
+<author>\{[^ ,]+[^ \",(\",)\}]\}		{
+											//printf("TESTECHAVETAS:%s\n",yytext );
+											a[tot]=strdup(yytext);
+											n++;tot++;
+										}
+
+<author>[^ ,]+[^ \",\}]					{	
+											printf("TESTE:%s\n",yytext);
+											a[tot]=strdup(yytext);
+											n++;tot++;
+										}
+
+<author>[ ]*[\"\}],?					{
+											BEGIN(categoria);
+											registaAuthors();						
+										}
+
+<author>.|\n							{;}
+
+<categoria>.|\n							{;}
+<categoria>\}\n 						{BEGIN(INITIAL);}
+.|\n  									{;}
 
 %%
 int yywrap() {return 1;}
