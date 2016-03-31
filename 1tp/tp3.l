@@ -19,7 +19,6 @@ int nParceiros=0;
 char* authorParceria[100];
 char* authorProcura;
 
-
 void registaAuthors(){
 	int i,j;
 	char** aux = a;
@@ -90,13 +89,11 @@ void registaAuthors(){
 										}
 
 <author>\{[^ ,]+[^ \",(\",)\}]\}		{
-											//printf("TESTECHAVETAS:%s\n",yytext );
 											a[tot]=strdup(yytext);
 											n++;tot++;
 										}
 
 <author>[^ ,]+[^ \",\}]					{	
-											//printf("TESTE:%s\n",yytext);
 											a[tot]=strdup(yytext);
 											n++;tot++;
 										}
@@ -139,11 +136,6 @@ int main(int argc, char** argv){
 	fpAuthor = fopen("grafAuthor.dot","a+");
 	fprintf(fpAuthor,"}");
 	fclose(fpAuthor);
-	
-	int j;
-	for(j=0;j<nParceiros;j++){
-		printf("PARCEIROS: %s\n",authorParceria[j]);
-	}
 
 	return 0;
 }

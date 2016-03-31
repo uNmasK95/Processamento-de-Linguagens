@@ -1,6 +1,4 @@
 strict graph authors {
-}strict graph authors {
-}strict graph authors {
 	"P. Henriques" -- "L. Barbosa";
 	"P. Henriques" -- "L. Barroca";
 	"P. Henriques" -- "J. Almeida";
