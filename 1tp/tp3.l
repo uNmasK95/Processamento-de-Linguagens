@@ -26,8 +26,10 @@ void registaAuthors(){
 	char buf[100];
 	numeroNomesAutores[numeroAutores]=n;
 	FILE* fp = fopen("graf.dot","a+");
+	FILE* fpAuthor = fopen("grafAuthor.dot","a+");
+
 	for(i=0; i<=numeroAutores;i++){
-		printf("%d\n",numeroNomesAutores[i]);
+		//printf("%d\n",numeroNomesAutores[i]);
 		if(numeroNomesAutores[i]==1){
 			sprintf(buf,"%s",aux[0]);
 		}else{
@@ -40,8 +42,8 @@ void registaAuthors(){
 		for(j=0;j<=numeroAutores;j++){
 			if(i!=j){
 				fprintf(fp,"\t\"%s\" -- \"%s\";\n",new[i],new[j]);
-
 				if(!strcmp(new[i],authorProcura)){
+					fprintf(fpAuthor,"\t\"%s\" -- \"%s\";\n",new[i],new[j]);
 					authorParceria[nParceiros]=strdup(new[j]);
 					nParceiros++;
 				}
@@ -50,6 +52,7 @@ void registaAuthors(){
 		}
 	}
 	fclose(fp);
+	fclose(fpAuthor);
 	n=0;
 }
 
@@ -93,7 +96,7 @@ void registaAuthors(){
 										}
 
 <author>[^ ,]+[^ \",\}]					{	
-											printf("TESTE:%s\n",yytext);
+											//printf("TESTE:%s\n",yytext);
 											a[tot]=strdup(yytext);
 											n++;tot++;
 										}
@@ -123,11 +126,20 @@ int main(int argc, char** argv){
 	fprintf(fp,"strict graph authors {\n");
 	fclose(fp);
 
+	FILE* fpAuthor = fopen("grafAuthor.dot","a+");
+	fprintf(fpAuthor,"strict graph authors {\n");
+	fclose(fpAuthor);
+
 	yylex();
 	
 	fp = fopen("graf.dot","a+");
 	fprintf(fp,"}");
 	fclose(fp);
+
+	fpAuthor = fopen("grafAuthor.dot","a+");
+	fprintf(fpAuthor,"}");
+	fclose(fpAuthor);
+	
 	int j;
 	for(j=0;j<nParceiros;j++){
 		printf("PARCEIROS: %s\n",authorParceria[j]);

@@ -83,13 +83,11 @@ void registaAuthors(){
 										}
 
 <author>\{[^ ,]+[^ \",(\",)\}]\}		{
-											//printf("TESTECHAVETAS:%s\n",yytext );
 											a[tot]=strdup(yytext);
 											n++;tot++;
 										}							
 
 <author>[^ ,]+[^ \",\}]					{
-											//printf("TESTE:%s\n",yytext );
 											a[tot]=strdup(yytext);
 											n++;tot++;
 										}
