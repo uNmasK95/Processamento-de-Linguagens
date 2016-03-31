@@ -7,7 +7,8 @@ char*  nomes[30];
 int cont[30];
 
 char* lowerCASE(char * str){
-	for(int i = 0; str[i]!='\0'; i++){
+	int i;
+	for(i = 0; str[i]!='\0'; i++){
   		str[i] = tolower(str[i]);
 	}
 	return str;
@@ -38,8 +39,8 @@ void addRegisto(char* nome){
 %%
 int yywrap() {return 1;}
 int main(){
-	//
-	for(int i=0;i<30;i++){
+	int i;
+	for(i=0;i<30;i++){
 		nomes[i]=NULL;
 		cont[i]=0;
 	}
@@ -49,7 +50,7 @@ int main(){
 
 	fprintf(fp, "<html>\n\t<head>\n\t\t<title>EXERCICIO 1</title>\n\t</head>\n\t<body>\n \t\t<h2>Lista Exercico 1</h2>\n\t\t\t<ul>\n");
 
-	for(int i=0;i<30 && nomes[i]!=NULL ;i++){
+	for(i=0;i<30 && nomes[i]!=NULL ;i++){
 
 		fprintf(fp, "\t\t\t<li> %s -> %d </li>\n", nomes[i],cont[i]);
 	}
