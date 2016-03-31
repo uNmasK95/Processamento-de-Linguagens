@@ -34,13 +34,6 @@ int authorBOOL=0;
 								numeroAutores++;
 								n=0;
 							}
-<author>,						{
-								numeroNomesAutores[numeroAutores]=n;
-								numeroAutores++;
-								n=0;
-							}
-
-
 <author>[^ ,]+[^ \",(\",)]				{
 								a[tot]=strdup(yytext);
 								n++;tot++;

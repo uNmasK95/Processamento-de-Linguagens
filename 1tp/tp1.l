@@ -1,8 +1,17 @@
 %{
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
+
 char*  nomes[30];
 int cont[30];
+
+char* lowerCASE(char * str){
+	for(int i = 0; str[i]!='\0'; i++){
+  		str[i] = tolower(str[i]);
+	}
+	return str;
+}
 
 void addRegisto(char* nome){
 	int found=0;
@@ -23,7 +32,7 @@ void addRegisto(char* nome){
 %x reservada
 %%
 ^[ ]*@		{BEGIN(reservada);}
-<reservada>[A-Za-z]+  {addRegisto(toLowerCase(yytext));BEGIN(INITIAL);}
+<reservada>[A-Za-z]+  {char* aux = lowerCASE(yytext);addRegisto(aux);BEGIN(INITIAL);}
 .|\n 	{;}
 
 %%
