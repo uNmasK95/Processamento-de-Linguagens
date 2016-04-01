@@ -128,7 +128,7 @@ void registaAuthors(){
 											n++;tot++;
 										}							
 
-<author>[^ ,]+([^ \"\},]|[^ \"\}],)			{
+<author>[^ ,]+([^ \"\},\n]|[^ \"\}],)			{
 											//printf("TESTE:%s\n",yytext);
 											a[tot]=strdup(yytext);
 											n++;tot++;

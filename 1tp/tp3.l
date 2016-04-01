@@ -19,6 +19,11 @@ int nParceiros=0;
 char* authorParceria[100];
 char* authorProcura;
 
+char* removeVirgula(char* name){
+	name[strlen(name)-1]='\0';
+	return name;
+}
+
 void registaAuthors(){
 	int i,j;
 	char** aux = a;
@@ -28,11 +33,15 @@ void registaAuthors(){
 	FILE* fpAuthor = fopen("grafAuthor.dot","a+");
 
 	for(i=0; i<=numeroAutores;i++){
-		//printf("%d\n",numeroNomesAutores[i]);
 		if(numeroNomesAutores[i]==1){
 			sprintf(buf,"%s",aux[0]);
 		}else{
-			sprintf(buf,"%c. %s",aux[0][0],aux[numeroNomesAutores[i]-1]);
+			if(aux[0][strlen(aux[0])-1]==','){
+				sprintf(buf,"%c. %s",aux[1][0],removeVirgula(aux[0]));
+			}else{
+				sprintf(buf,"%c. %s",aux[0][0],aux[numeroNomesAutores[i]-1]);
+			}
+			
 		}
 		new[i]=strdup(buf);					
 		aux=aux+numeroNomesAutores[i];
@@ -88,12 +97,12 @@ void registaAuthors(){
 											n=0;
 										}
 
-<author>\{[^ ,]+[^ \",(\",)\}]\}		{
+<author>\{[^ ,]+[^ \"\}]\}				{
 											a[tot]=strdup(yytext);
 											n++;tot++;
 										}
 
-<author>[^ ,]+[^ \",\}]					{	
+<author>[^ ,]+([^ \"\},\n]|[^ \"\}],)		{	
 											a[tot]=strdup(yytext);
 											n++;tot++;
 										}
