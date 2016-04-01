@@ -14,6 +14,11 @@ int bool=0;
 int titleBOOL=0;
 int authorBOOL=0;
 
+char* removeVirgula(char* name){
+	name[strlen(name)-1]='\0';
+	return name;
+}
+
 void registaAuthors(){
 	char** aux = a;
 	char* autor; 
@@ -22,23 +27,58 @@ void registaAuthors(){
 	numeroNomesAutores[numeroAutores]=n;
 	for(i=0; i<=numeroAutores;i++){
 		if(numeroAutores==0){
+			//0 ou 1 autores
 			if(tot==0){
+				// 0 autores
 				printf("author = { },\n");
 			}else{
 				if(tot==1){
 					printf("author = { %s },\n",aux[0]);
 				}else{
-					printf("author = { %c. %s },\n",aux[0][0],aux[numeroNomesAutores[i]-1]);
+					if(aux[0][strlen(aux[0])-1]==','){
+						printf("author = { %c. %s },\n",aux[1][0],removeVirgula(aux[0]));
+					}else{
+						printf("author = { %c. %s },\n",aux[0][0],aux[numeroNomesAutores[i]-1]);
+					}
 				}
 			}
 		}else{
 			if(i==0){
-				printf("author = { %c. %s and\n",aux[0][0],aux[numeroNomesAutores[i]-1]);
+				//tem mais que um autor
+				if(numeroNomesAutores[i]==1){
+					//um nome apenas o author
+					printf("author = { %s and\n",aux[0]);
+				}else{
+					if(aux[0][strlen(aux[0])-1]==','){
+						printf("author = { %c. %s and\n",aux[1][0],removeVirgula(aux[0]));
+					}else{
+						printf("author = { %c. %s and\n",aux[0][0],aux[numeroNomesAutores[i]-1]);
+					}
+				}
+				
 			}else{
 				if(i==numeroAutores){
-					printf("\t%c. %s },\n",aux[0][0],aux[numeroNomesAutores[i]-1]);
+					if(numeroNomesAutores[i]==1){
+						printf("\t%s },\n",aux[0]);
+					}else{
+						if(aux[0][strlen(aux[0])-1]==','){
+							printf("\t%c. %s },\n",aux[1][0],removeVirgula(aux[0]));			
+						}else{
+							printf("\t%c. %s },\n",aux[0][0],aux[numeroNomesAutores[i]-1]);
+						}
+					}
+					
 				}else{
-					printf("\t%c. %s and\n",aux[0][0],aux[numeroNomesAutores[i]-1]);
+					if(numeroNomesAutores[i]==1){
+						printf("\t%s and\n",aux[0]);
+					}else{
+						if(aux[0][strlen(aux[0])-1]==','){
+							printf("\t%c. %s and\n",aux[1][0],removeVirgula(aux[0]));			
+						}else{
+							printf("\t%c. %s and\n",aux[0][0],aux[numeroNomesAutores[i]-1]);
+						}
+					}
+					
 				}
 			}
 			aux=aux+numeroNomesAutores[i];
@@ -82,12 +122,14 @@ void registaAuthors(){
 											n=0;
 										}
 
-<author>\{[^ ,]+[^ \",(\",)\}]\}		{
+<author>\{[^ ,]+[^ \"\}]\}		{
+											//printf("TESTECHAVETAS:%s\n",yytext);
 											a[tot]=strdup(yytext);
 											n++;tot++;
 										}							
 
-<author>[^ ,]+[^ \",\}]					{
+<author>[^ ,]+([^ \"\},]|[^ \"\}],)			{
+											//printf("TESTE:%s\n",yytext);
 											a[tot]=strdup(yytext);
 											n++;tot++;
 										}
