@@ -19,6 +19,14 @@ char* removeVirgula(char* name){
 	return name;
 }
 
+char* retiraEnter(char* lixo){
+	int i = 0;
+	while(lixo[0]=='\n'){lixo++;}
+	i=strlen(lixo);
+	while(lixo[i-1]=='\n'){lixo[i-1]='\0';i--;}
+	
+	return lixo;
+}
 void registaAuthors(){
 	char** aux = a;
 	char* autor; 
@@ -122,19 +130,19 @@ void registaAuthors(){
 											n=0;
 										}
 
-<author>\{[^ ,]+[^ \"\}]\}		{
+<author>\{[^ ,]+[^ \"\}]\}			{
 											//printf("TESTECHAVETAS:%s\n",yytext);
 											a[tot]=strdup(yytext);
 											n++;tot++;
 										}							
 
 <author>[^ ,]+([^ \"\},\n]|[^ \"\}],)			{
-											//printf("TESTE:%s\n",yytext);
+											printf("TESTE:%s\n",yytext);
 											a[tot]=strdup(yytext);
 											n++;tot++;
 										}
 
-<author>[ ]*[\"\}],?					{
+<author>[ ]*[\"\}],?\n					{
 											BEGIN(categoria);
 											registaAuthors();
 										}
@@ -199,7 +207,7 @@ void registaAuthors(){
 								if(titleBOOL && authorBOOL){
 									printf("},");
 								}else{
-									strcat(lixo,"},");
+									strcat(lixo,"\n},");
 								}
 							}
 
@@ -208,7 +216,7 @@ void registaAuthors(){
 <categoria>.|\n 			{
 								if(titleBOOL && authorBOOL ){
 									if(!bool){
-										printf("%s%s",lixo,yytext);
+										printf("%s%s",retiraEnter(lixo),yytext);
 										bool=1;
 									}else{
 										printf("%s",yytext);
