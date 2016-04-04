@@ -617,7 +617,6 @@ void registaAuthors(){
 		if(numeroAutores==0){
 			//0 ou 1 autores
 			if(tot==0){
-				// 0 autores
 				printf("author = { },\n");
 			}else{
 				if(tot==1){
@@ -632,9 +631,7 @@ void registaAuthors(){
 			}
 		}else{
 			if(i==0){
-				//tem mais que um autor
 				if(numeroNomesAutores[i]==1){
-					//um nome apenas o author
 					printf("author = { %s and\n",aux[0]);
 				}else{
 					if(aux[0][strlen(aux[0])-1]==','){
@@ -675,7 +672,7 @@ void registaAuthors(){
 }
 
 
-#line 679 "lex.yy.c"
+#line 676 "lex.yy.c"
 
 #define INITIAL 0
 #define author 1
@@ -860,9 +857,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 100 "tp2.l"
+#line 97 "tp2.l"
 
-#line 866 "lex.yy.c"
+#line 863 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -947,212 +944,210 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 101 "tp2.l"
+#line 98 "tp2.l"
 {
-								BEGIN(categoria); 
-								printf("%s\n",yytext);
-								tot=0;
-								bool=0;titleBOOL=0;authorBOOL=0;
-								lixo[0]='\0';
-							}
+	BEGIN(categoria); 
+	printf("%s\n",yytext);
+	tot=0;
+	bool=0;titleBOOL=0;authorBOOL=0;
+	lixo[0]='\0';
+}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 109 "tp2.l"
+#line 106 "tp2.l"
 {	
-								BEGIN(author);
-								numeroAutores=0;
-								tot=0;n=0; 
-								authorBOOL=1;
-							}
+	BEGIN(author);
+	numeroAutores=0;
+	tot=0;n=0; 
+	authorBOOL=1;
+}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 116 "tp2.l"
+#line 113 "tp2.l"
 {
-									numeroNomesAutores[numeroAutores]=n;
-									numeroAutores++;
-									n=0;
-								}		
+	numeroNomesAutores[numeroAutores]=n;
+	numeroAutores++;
+	n=0;
+}		
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 122 "tp2.l"
+#line 119 "tp2.l"
 {
-											numeroNomesAutores[numeroAutores]=n;
-											numeroAutores++;
-											n=0;
-										}	
+	numeroNomesAutores[numeroAutores]=n;
+	numeroAutores++;
+	n=0;
+}	
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 127 "tp2.l"
+#line 124 "tp2.l"
 {
-											numeroNomesAutores[numeroAutores]=n;
-											numeroAutores++;
-											n=0;
-										}
+	numeroNomesAutores[numeroAutores]=n;
+	numeroAutores++;
+	n=0;
+}
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 133 "tp2.l"
+#line 130 "tp2.l"
 {
-											//printf("TESTECHAVETAS:%s\n",yytext);
-											a[tot]=strdup(yytext);
-											n++;tot++;
-										}							
+	a[tot]=strdup(yytext);
+	n++;tot++;
+}							
 	YY_BREAK
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 139 "tp2.l"
+#line 134 "tp2.l"
 {
-											printf("TESTE:%s\n",yytext);
-											a[tot]=strdup(yytext);
-											n++;tot++;
-										}
+	a[tot]=strdup(yytext);
+	n++;tot++;
+}
 	YY_BREAK
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 145 "tp2.l"
+#line 139 "tp2.l"
 {
-											BEGIN(categoria);
-											registaAuthors();
-										}
+	BEGIN(categoria);
+	registaAuthors();
+}
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 149 "tp2.l"
+#line 143 "tp2.l"
 {;}
 	YY_BREAK
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 152 "tp2.l"
+#line 146 "tp2.l"
 {
-															BEGIN(title); 
-															if(authorBOOL){
-																printf("%s",yytext);
-															}else{
-																strcat(lixo,yytext);
-															}
-															titleBOOL=1;
-														}
+	BEGIN(title); 
+	if(authorBOOL){
+		printf("%s",yytext);
+	}else{
+		strcat(lixo,yytext);
+	}
+	titleBOOL=1;
+}
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 162 "tp2.l"
+#line 156 "tp2.l"
 {
-															BEGIN(title);
-															if(authorBOOL){
-																printf("%s",yytext);
-															}else{
-																strcat(lixo,yytext);
-															}
-															titleBOOL=1;
-														}
+	BEGIN(title);
+	if(authorBOOL){
+		printf("%s",yytext);
+	}else{
+		strcat(lixo,yytext);
+	}
+	titleBOOL=1;
+}
 	YY_BREAK
 case 12:
 /* rule 12 can match eol */
 YY_RULE_SETUP
-#line 172 "tp2.l"
+#line 166 "tp2.l"
 {	
-								BEGIN(categoria);
-								if(yytext[strlen(yytext)-1]==','){
-									yytext[strlen(yytext)-2]='}';
-								} else{
-									yytext[strlen(yytext)-1]='}';
-								}
-								if(authorBOOL){
-									printf("%s",yytext);
-								}else{
-									strcat(lixo,yytext);
-								}
-							}
+	BEGIN(categoria);
+	if(yytext[strlen(yytext)-1]==','){
+		yytext[strlen(yytext)-2]='}';
+	} else{
+		yytext[strlen(yytext)-1]='}';
+	}
+	if(authorBOOL){
+		printf("%s",yytext);
+	}else{
+		strcat(lixo,yytext);
+	}
+}
 	YY_BREAK
 case 13:
 /* rule 13 can match eol */
 YY_RULE_SETUP
-#line 186 "tp2.l"
+#line 180 "tp2.l"
 {
-								BEGIN(categoria);
-								if(authorBOOL){
-									printf("%s",yytext);
-								}else{
-									strcat(lixo,yytext);
-								}
-								
-							}
+	BEGIN(categoria);
+	if(authorBOOL){
+		printf("%s",yytext);
+	}else{
+		strcat(lixo,yytext);
+	}
+	
+}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 198 "tp2.l"
+#line 190 "tp2.l"
 { 
-								if(titleBOOL && authorBOOL){
-									printf(" = {");
-								}else{
-									strcat(lixo," = {");
-								}
-							}
+	if(titleBOOL && authorBOOL){
+		printf(" = {");
+	}else{
+		strcat(lixo," = {");
+	}
+}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 206 "tp2.l"
+#line 198 "tp2.l"
 { 
-								if(titleBOOL && authorBOOL){
-									printf("},");
-								}else{
-									strcat(lixo,"\n},");
-								}
-							}
+	if(titleBOOL && authorBOOL){
+		printf("},");
+	}else{
+		strcat(lixo,"\n},");
+	}
+}
 	YY_BREAK
 case 16:
 /* rule 16 can match eol */
 YY_RULE_SETUP
-#line 216 "tp2.l"
+#line 206 "tp2.l"
 {
-								if(titleBOOL && authorBOOL ){
-									if(!bool){
-										printf("%s%s",retiraEnter(lixo),yytext);
-										bool=1;
-									}else{
-										printf("%s",yytext);
-									} 
-								 }else{
-								 	strcat(lixo,yytext);
-							 	} 
-							}
+	if(titleBOOL && authorBOOL ){
+		if(!bool){
+			printf("%s%s",retiraEnter(lixo),yytext);
+			bool=1;
+		}else{
+			printf("%s",yytext);
+		} 
+	 }else{
+	 	strcat(lixo,yytext);
+ 	} 
+}
 	YY_BREAK
 case 17:
 /* rule 17 can match eol */
 YY_RULE_SETUP
-#line 229 "tp2.l"
+#line 219 "tp2.l"
 {	
-								BEGIN(INITIAL);
-								if(!(titleBOOL && authorBOOL)){
-									printf("%s",lixo);
-								}
-								printf("}\n\n");
-							}
+	BEGIN(INITIAL);
+	if(!(titleBOOL && authorBOOL)){
+		printf("%s",lixo);
+	}
+	printf("}\n\n");
+}
 	YY_BREAK
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
-#line 237 "tp2.l"
+#line 227 "tp2.l"
 {;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 239 "tp2.l"
+#line 229 "tp2.l"
 ECHO;
 	YY_BREAK
-#line 1156 "lex.yy.c"
+#line 1151 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(author):
 case YY_STATE_EOF(categoria):
@@ -2152,7 +2147,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 239 "tp2.l"
+#line 229 "tp2.l"
 
 
 

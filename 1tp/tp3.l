@@ -71,52 +71,52 @@ void registaAuthors(){
 
 %%
 @[A-Za-z]+\{[A-Za-z0-9:\+]+,		{
-										BEGIN(categoria);
-										tot=0;
-									}
+	BEGIN(categoria);
+	tot=0;
+}
 
 <categoria>[Aa][Uu][Tt][Hh][Oo][Rr][ \t]*=[ \t]*[\"\{]  {
-										BEGIN(author);
-										numeroAutores=0;
-										tot=0;n=0; 
-									}
+	BEGIN(author);
+	numeroAutores=0;
+	tot=0;n=0; 
+}
 
-<author>[ ]+[Aa][Nn][Dd][ ]+			{
-											numeroNomesAutores[numeroAutores]=n;
-											numeroAutores++;
-											n=0;
-										}			
-<author>[ ]+[Aa][Nn][Dd][ ]*\n?[ ]*		{
-											numeroNomesAutores[numeroAutores]=n;
-											numeroAutores++;
-											n=0;
-										}	
-<author>[ ]*\n[ ]*[Aa][Nn][Dd][ ]+		{
-											numeroNomesAutores[numeroAutores]=n;
-											numeroAutores++;
-											n=0;
-										}
+<author>[ ]+[Aa][Nn][Dd][ ]+ {
+	numeroNomesAutores[numeroAutores]=n;
+	numeroAutores++;
+	n=0;
+}			
+<author>[ ]+[Aa][Nn][Dd][ ]*\n?[ ]*	{
+	numeroNomesAutores[numeroAutores]=n;
+	numeroAutores++;
+	n=0;
+}	
+<author>[ ]*\n[ ]*[Aa][Nn][Dd][ ]+	{
+	numeroNomesAutores[numeroAutores]=n;
+	numeroAutores++;
+	n=0;
+}
 
-<author>\{[^ ,]+[^ \"\}]\}				{
-											a[tot]=strdup(yytext);
-											n++;tot++;
-										}
+<author>\{[^ ,]+[^ \"\}]\}	{
+	a[tot]=strdup(yytext);
+	n++;tot++;
+}
 
-<author>[^ ,]+([^ \"\},\n]|[^ \"\}],)		{	
-											a[tot]=strdup(yytext);
-											n++;tot++;
-										}
+<author>[^ ,]+([^ \"\},\n]|[^ \"\}],)	{	
+	a[tot]=strdup(yytext);
+	n++;tot++;
+}
 
-<author>[ ]*[\"\}],?					{
-											BEGIN(categoria);
-											registaAuthors();						
-										}
+<author>[ ]*[\"\}],?	{
+	BEGIN(categoria);
+	registaAuthors();						
+}
 
-<author>.|\n							{;}
+<author>.|\n 	{;}
 
-<categoria>.|\n							{;}
-<categoria>\}\n 						{BEGIN(INITIAL);}
-.|\n  									{;}
+<categoria>.|\n	{;}
+<categoria>\}\n {BEGIN(INITIAL);}
+.|\n 	{;}
 
 %%
 int yywrap() {return 1;}

@@ -37,7 +37,6 @@ void registaAuthors(){
 		if(numeroAutores==0){
 			//0 ou 1 autores
 			if(tot==0){
-				// 0 autores
 				printf("author = { },\n");
 			}else{
 				if(tot==1){
@@ -52,9 +51,7 @@ void registaAuthors(){
 			}
 		}else{
 			if(i==0){
-				//tem mais que um autor
 				if(numeroNomesAutores[i]==1){
-					//um nome apenas o author
 					printf("author = { %s and\n",aux[0]);
 				}else{
 					if(aux[0][strlen(aux[0])-1]==','){
@@ -98,143 +95,136 @@ void registaAuthors(){
 
 %x author categoria title
 %%
-@[A-Za-z]+\{[A-Za-z0-9\:\+]+,				{
-								BEGIN(categoria); 
-								printf("%s\n",yytext);
-								tot=0;
-								bool=0;titleBOOL=0;authorBOOL=0;
-								lixo[0]='\0';
-							}
+@[A-Za-z]+\{[A-Za-z0-9\:\+]+,	{
+	BEGIN(categoria); 
+	printf("%s\n",yytext);
+	tot=0;
+	bool=0;titleBOOL=0;authorBOOL=0;
+	lixo[0]='\0';
+}
 
 <categoria>[Aa][Uu][Tt][Hh][Oo][Rr][ \t]*=[ \t]*[\"\{]	{	
-								BEGIN(author);
-								numeroAutores=0;
-								tot=0;n=0; 
-								authorBOOL=1;
-							}
+	BEGIN(author);
+	numeroAutores=0;
+	tot=0;n=0; 
+	authorBOOL=1;
+}
 
 <author>[ ]+[Aa][Nn][Dd][ ]+	{
-									numeroNomesAutores[numeroAutores]=n;
-									numeroAutores++;
-									n=0;
-								}		
+	numeroNomesAutores[numeroAutores]=n;
+	numeroAutores++;
+	n=0;
+}		
 
 <author>[ ]+[Aa][Nn][Dd][ ]*\n?[ ]*		{
-											numeroNomesAutores[numeroAutores]=n;
-											numeroAutores++;
-											n=0;
-										}	
+	numeroNomesAutores[numeroAutores]=n;
+	numeroAutores++;
+	n=0;
+}	
 <author>[ ]*\n[ ]*[Aa][Nn][Dd][ ]+		{
-											numeroNomesAutores[numeroAutores]=n;
-											numeroAutores++;
-											n=0;
-										}
+	numeroNomesAutores[numeroAutores]=n;
+	numeroAutores++;
+	n=0;
+}
 
-<author>\{[^ ,]+[^ \"\}]\}			{
-											//printf("TESTECHAVETAS:%s\n",yytext);
-											a[tot]=strdup(yytext);
-											n++;tot++;
-										}							
+<author>\{[^ ,]+[^ \"\}]\} {
+	a[tot]=strdup(yytext);
+	n++;tot++;
+}							
+<author>[^ ,]+([^ \"\},\n]|[^ \"\}],) {
+	a[tot]=strdup(yytext);
+	n++;tot++;
+}
 
-<author>[^ ,]+([^ \"\},\n]|[^ \"\}],)			{
-											printf("TESTE:%s\n",yytext);
-											a[tot]=strdup(yytext);
-											n++;tot++;
-										}
-
-<author>[ ]*[\"\}],?\n					{
-											BEGIN(categoria);
-											registaAuthors();
-										}
-<author>.|\n							{;}
+<author>[ ]*[\"\}],?\n 	{
+	BEGIN(categoria);
+	registaAuthors();
+}
+<author>.|\n 	{;}
 
 
 <categoria>[ \n\t][Tt][Ii][Tt][Ll][Ee][ \t]*=[ \t]*\"	{
-															BEGIN(title); 
-															if(authorBOOL){
-																printf("%s",yytext);
-															}else{
-																strcat(lixo,yytext);
-															}
-															titleBOOL=1;
-														}
+	BEGIN(title); 
+	if(authorBOOL){
+		printf("%s",yytext);
+	}else{
+		strcat(lixo,yytext);
+	}
+	titleBOOL=1;
+}
 
 <categoria>[ \n\t][Tt][Ii][Tt][Ll][Ee][ \t]*=[ \t]*\{ 	{
-															BEGIN(title);
-															if(authorBOOL){
-																printf("%s",yytext);
-															}else{
-																strcat(lixo,yytext);
-															}
-															titleBOOL=1;
-														}
+	BEGIN(title);
+	if(authorBOOL){
+		printf("%s",yytext);
+	}else{
+		strcat(lixo,yytext);
+	}
+	titleBOOL=1;
+}
 
 <title>[^=]*\",? 		{	
-								BEGIN(categoria);
-								if(yytext[strlen(yytext)-1]==','){
-									yytext[strlen(yytext)-2]='}';
-								} else{
-									yytext[strlen(yytext)-1]='}';
-								}
-								if(authorBOOL){
-									printf("%s",yytext);
-								}else{
-									strcat(lixo,yytext);
-								}
-							}
+	BEGIN(categoria);
+	if(yytext[strlen(yytext)-1]==','){
+		yytext[strlen(yytext)-2]='}';
+	} else{
+		yytext[strlen(yytext)-1]='}';
+	}
+	if(authorBOOL){
+		printf("%s",yytext);
+	}else{
+		strcat(lixo,yytext);
+	}
+}
 
-<title>[^=]*\},?			{
-								BEGIN(categoria);
-								if(authorBOOL){
-									printf("%s",yytext);
-								}else{
-									strcat(lixo,yytext);
-								}
-								
-							}
-
-
+<title>[^=]*\},? {
+	BEGIN(categoria);
+	if(authorBOOL){
+		printf("%s",yytext);
+	}else{
+		strcat(lixo,yytext);
+	}
+	
+}
 
 <categoria>[ ]*=[ ]*\"		{ 
-								if(titleBOOL && authorBOOL){
-									printf(" = {");
-								}else{
-									strcat(lixo," = {");
-								}
-							}
+	if(titleBOOL && authorBOOL){
+		printf(" = {");
+	}else{
+		strcat(lixo," = {");
+	}
+}
 
 <categoria>\",				{ 
-								if(titleBOOL && authorBOOL){
-									printf("},");
-								}else{
-									strcat(lixo,"\n},");
-								}
-							}
+	if(titleBOOL && authorBOOL){
+		printf("},");
+	}else{
+		strcat(lixo,"\n},");
+	}
+}
 
+<categoria>.|\n {
+	if(titleBOOL && authorBOOL ){
+		if(!bool){
+			printf("%s%s",retiraEnter(lixo),yytext);
+			bool=1;
+		}else{
+			printf("%s",yytext);
+		} 
+	 }else{
+	 	strcat(lixo,yytext);
+ 	} 
+}
 
+<categoria>\}\n {	
+	BEGIN(INITIAL);
+	if(!(titleBOOL && authorBOOL)){
+		printf("%s",lixo);
+	}
+	printf("}\n\n");
+}
 
-<categoria>.|\n 			{
-								if(titleBOOL && authorBOOL ){
-									if(!bool){
-										printf("%s%s",retiraEnter(lixo),yytext);
-										bool=1;
-									}else{
-										printf("%s",yytext);
-									} 
-								 }else{
-								 	strcat(lixo,yytext);
-							 	} 
-							}
-
-<categoria>\}\n 	 		{	
-								BEGIN(INITIAL);
-								if(!(titleBOOL && authorBOOL)){
-									printf("%s",lixo);
-								}
-								printf("}\n\n");
-							}
-
-.|\n 						{;}
+.|\n {;}
 
 %%
 

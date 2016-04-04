@@ -13,7 +13,7 @@ p3:
 	if [ -f "grafAuthor.dot" ]; then rm grafAuthor.dot; fi;
 	flex tp3.l
 	gcc -o tp3 lex.yy.c
-	./tp3 ${ARGS} < lib.bib 
+	./tp3 "${ARGS}" < lib.bib 
 
 graph:
 	if [ -f "graf.dot" ]; then dot -Tpng graf.dot -o graf.png; fi;
