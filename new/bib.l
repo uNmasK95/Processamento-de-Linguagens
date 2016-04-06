@@ -161,9 +161,20 @@ void registaAuthors(){
 %x reservada categoria author title
 %%
 ^[ ]*@		{BEGIN(reservada);}
-<reservada>[A-Za-z]+  {printf("\n@%s",yytext);char* aux = lowerCASE(yytext);addRegisto(aux); }
-<reservada>\{[^,]+, {printf("%s\n",yytext);BEGIN(categoria); titleBOOL=0;authorBOOL=0;bool=0;lixo[0]='\0';}
+<reservada>[A-Za-z]+  {
+	printf("\n@%s",yytext);
+	char* aux = lowerCASE(yytext);
+	addRegisto(aux);
+}
 
+<reservada>\{[^,]+, {
+	printf("%s\n",yytext);
+	BEGIN(categoria); 
+	titleBOOL=0;
+	authorBOOL=0;
+	bool=0;
+	lixo[0]='\0';
+}
 
 <categoria>[ \n\t][Aa][Uu][Tt][Hh][Oo][Rr][ \t]*=[ \t]*[\"\{]	{	
 	BEGIN(author);
@@ -289,8 +300,6 @@ void registaAuthors(){
  	} 
 }
 
-
-
 <categoria>\}\n {	
 	BEGIN(INITIAL);
 	if(!(titleBOOL && authorBOOL)){
@@ -302,7 +311,6 @@ void registaAuthors(){
 .|\n {;}
 
 %%
-
 void initArrayCategorias(){
 	int i;
 	for(i=0;i<30;i++){
