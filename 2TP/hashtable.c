@@ -19,17 +19,17 @@ typedef struct entry
     struct entry *next;
 }Entry;
  
-typedef Entry *HashTable[HASHSIZE];
+typedef Entry* HashTable[HASHSIZE];
  
  
 int hash(Variavel v){
-    return (strlen(v.nome)%HASHSIZE);
+    return (strlen(v.key)%HASHSIZE);
 }
  
 void initializeTable(HashTable h){
     int i;
     for(i=0;i<HASHSIZE;i++){
-	h[i]->var.nome;
+	h[i].var.key;
         h[i]->next = NULL;
     }
 }
