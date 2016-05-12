@@ -1,0 +1,17 @@
+INICIO
+	VAR n;
+	VAR na;
+	VAR read;
+	VAR sum;
+INSTINICIO
+	sum = 0;
+	na=1;
+	LER n;
+	ENQUANTO (na LE n) ENTAO
+		LER read;
+		sum = sum + read;
+		na = na +1;
+	FIMENQUANTO
+	IMPRIMIR sum;
+INSTFIM
+FIM
