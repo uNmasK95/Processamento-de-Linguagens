@@ -1,0 +1,45 @@
+INICIO
+	VAR n;
+	VAR na;
+	VAR read;
+	VAR arr[10];
+	VAR i;
+	VAR j;
+	VAR swap;
+	VAR aux;
+	VAR jone;
+INSTINICIO
+	tot = 0;
+	na=0;
+	n=10;
+	ENQUANTO (na LL n) ENTAO
+		LER read;
+		arr[na]=read;
+		na = na +1;
+	FIMENQUANTO
+	
+	i=0;
+	n=n-1;
+	ENQUANTO (i LL n) ENTAO
+		j=0;
+		aux=n-i;
+		ENQUANTO (j LL aux) ENTAO
+			jone=j+1;
+			SE (arr[j] GG arr[jone]) ENTAO
+				swap = arr[j];
+				arr[j]=arr[jone];
+				arr[jone]=swap;
+			SENAO
+			FIMSE
+			j=j+1;
+		FIMENQUANTO
+		i = i +1;
+	FIMENQUANTO
+	i=0;
+	ENQUANTO (i LL n) ENTAO
+		IMPRIMIR arr[na];
+		i = i +1;
+	FIMENQUANTO
+
+INSTFIM
+FIM
