@@ -1,0 +1,25 @@
+INICIO
+	VAR a;
+	VAR b;
+	VAR c;
+	VAR g;
+INSTINICIO
+	g=-999;
+	LER a;
+	SE (a GG g) ENTAO
+		g=a;
+	SENAO
+	FIMSE
+	LER b;
+	SE (b GG g) ENTAO
+		g=b;
+	SENAO
+	FIMSE
+	LER c;
+	SE (c GG g) ENTAO
+		g=c;
+	SENAO
+	FIMSE
+	IMPRIMIR g;
+INSTFIM
+FIM
