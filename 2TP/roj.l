@@ -19,6 +19,7 @@ ENTAO						{ return ENTAO; }
 SENAO						{ return SENAO; }
 FIMSE						{ return FIMSE; }
 ENQUANTO					{ return ENQUANTO; }
+FIMENQUANTO					{ return FIMENQUANTO; }
 IMPRIMIR					{ return IMPRIMIR; }
 LER						{ return LER; }
 DIFF						{ return DIFF; }
