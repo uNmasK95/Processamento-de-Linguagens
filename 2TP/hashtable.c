@@ -81,6 +81,6 @@ return aux
 int main()
 {   
  
-    printf("%d\n",hash("ruifre") );
+    //printf("%d\n",hash("ruifre") );
     return 0;
 }
