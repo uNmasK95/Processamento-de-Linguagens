@@ -8,7 +8,7 @@ lixo .|\n
 
 %%
 
-[\+\-\*\/=;()\[\]]				{ return yytext[0]; }
+[\+\-\*\/=;()\[\]\%]				{ return yytext[0]; }
 INICIO						{ return INICIO; }
 FIM						{ return FIM; }
 INSTINICIO					{ return INSTINICIO; }
@@ -33,7 +33,7 @@ NOT						{ return NOT; }
 
 
 {letra}+					{yylval.var = strdup(yytext); return id;}
-\-?{digito}+					{yylval.val = atoi(yytext); return num;}
+{digito}+					{yylval.val = atoi(yytext); return num;}
 {lixo}						{;}
 
 %%

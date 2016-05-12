@@ -15,14 +15,13 @@
 %token SE ENTAO SENAO FIMSE
 %token ENQUANTO FIMENQUANTO
 %token IMPRIMIR LER
-%token MOD
 %token DIFF GG LL GE LE EQ AND OR NOT
 %token <var>id
 %token <val>num
 
 
-%type <val>Expressao
-%type <val>Condicao
+//%type <val>Expressao
+//%type <val>Condicao
 
 
 %%
@@ -40,8 +39,8 @@ Declaracao	: VAR id ';'
 		| VAR id Array ';'	
 		;
 
-Array 		: '[' num ']'
-		| '[' num ']''[' num ']'
+Array 		: '[' Valor ']'
+		| '[' Valor ']''[' Valor ']'
 		; 
 
 Body 		: 
@@ -73,6 +72,7 @@ Op 		: '+'
 		| '-'
 		| '*'
 		| '/'
+		| '%'
 		;
 
 Condicional	: SE '(' Condicao ')' ENTAO Instrucoes SENAO Instrucoes FIMSE
@@ -87,19 +87,20 @@ Input		: LER Variavel ';'
 Output 		: IMPRIMIR Variavel ';'
 		;
 
-Condicao 	: Variavel
-		| Variavel DIFF Variavel
-		| Variavel GG Variavel
-		| Variavel LL Variavel
-		| Variavel GE Variavel
-		| Variavel LE Variavel
-		| Variavel EQ Variavel
-		| Variavel AND Variavel
-		| Variavel OR Variavel
+Condicao 	: Valor
+		| Valor DIFF Valor
+		| Valor GG Valor
+		| Valor LL Valor
+		| Valor GE Valor
+		| Valor LE Valor
+		| Valor EQ Valor
+		| Valor AND Valor
+		| Valor OR Valor
 		| NOT Condicao
 		;
 
 Valor		: num
+		| '-' num
 		| Variavel
 		; 
 
