@@ -1,0 +1,37 @@
+INICIO
+	VAR i;
+	VAR j;
+	VAR read;
+	VAR max=-999;
+	VAR sum=0;
+	VAR matrix[10][10];
+	VAR atual;
+	VAR media;
+INSTINICIO
+	ENQUANTO (i LL 10) ENTAO
+		ENQUANTO (j LL 10) ENTAO
+			LER read;
+			matrix[i][j]=read;
+			j = j +1;
+		FIMENQUANTO
+		i = i +1;
+	FIMENQUANTO
+
+	i=0;
+	j=0;
+	ENQUANTO (i LL 10) ENTAO
+		ENQUANTO (j LL 10) ENTAO
+			atual=matrix[i][j];
+			sum=sum+atual;
+			SE (atual GE max) ENTAO
+				max=atual;
+			SENAO
+			FIMSE
+		FIMENQUANTO
+		i = i +1;
+	FIMENQUANTO
+	IMPRIMIR max;
+	media=sum / (i*j);
+	IMPRIMIR media;
+INSTFIM
+FIM

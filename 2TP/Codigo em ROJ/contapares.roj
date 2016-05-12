@@ -1,0 +1,23 @@
+INICIO
+	VAR n;
+	VAR na;
+	VAR read;
+	VAR tot;
+	VAR mod;
+INSTINICIO
+	tot = 0;
+	na=0;
+	LER n;
+	ENQUANTO (na LL n) ENTAO
+		LER read;
+		mod = read % 2;
+		SE (mod EQ 0) ENTAO
+			IMPRIMIR read;
+			tot=tot+1;
+		SENAO
+		FIMSE
+		na = na +1;
+	FIMENQUANTO
+	IMPRIMIR tot;
+INSTFIM
+FIM
