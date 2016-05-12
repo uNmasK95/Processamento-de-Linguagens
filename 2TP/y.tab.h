@@ -44,25 +44,26 @@
      INSTINICIO = 260,
      INSTFIM = 261,
      VAR = 262,
-     se = 263,
-     entao = 264,
-     senao = 265,
-     fimse = 266,
-     enquanto = 267,
-     fimenquanto = 268,
-     imprimir = 269,
-     ler = 270,
-     DIFF = 271,
-     GG = 272,
-     LL = 273,
-     GE = 274,
-     LE = 275,
-     EQ = 276,
-     AND = 277,
-     OR = 278,
-     NOT = 279,
-     id = 280,
-     num = 281
+     SE = 263,
+     ENTAO = 264,
+     SENAO = 265,
+     FIMSE = 266,
+     ENQUANTO = 267,
+     FIMENQUANTO = 268,
+     IMPRIMIR = 269,
+     LER = 270,
+     MOD = 271,
+     DIFF = 272,
+     GG = 273,
+     LL = 274,
+     GE = 275,
+     LE = 276,
+     EQ = 277,
+     AND = 278,
+     OR = 279,
+     NOT = 280,
+     id = 281,
+     num = 282
    };
 #endif
 /* Tokens.  */
@@ -71,25 +72,26 @@
 #define INSTINICIO 260
 #define INSTFIM 261
 #define VAR 262
-#define se 263
-#define entao 264
-#define senao 265
-#define fimse 266
-#define enquanto 267
-#define fimenquanto 268
-#define imprimir 269
-#define ler 270
-#define DIFF 271
-#define GG 272
-#define LL 273
-#define GE 274
-#define LE 275
-#define EQ 276
-#define AND 277
-#define OR 278
-#define NOT 279
-#define id 280
-#define num 281
+#define SE 263
+#define ENTAO 264
+#define SENAO 265
+#define FIMSE 266
+#define ENQUANTO 267
+#define FIMENQUANTO 268
+#define IMPRIMIR 269
+#define LER 270
+#define MOD 271
+#define DIFF 272
+#define GG 273
+#define LL 274
+#define GE 275
+#define LE 276
+#define EQ 277
+#define AND 278
+#define OR 279
+#define NOT 280
+#define id 281
+#define num 282
 
 
 
@@ -99,7 +101,7 @@ typedef union YYSTYPE
 #line 10 "roj.y"
 {int val; char* var;}
 /* Line 1529 of yacc.c.  */
-#line 103 "y.tab.h"
+#line 105 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

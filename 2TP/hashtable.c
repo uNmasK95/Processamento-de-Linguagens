@@ -7,8 +7,8 @@
  
 typedef struct variavel
 {
-	char* nome;
-	int endereco;
+	char* key;
+	int addr;
 	int size;
 	int type; // 0 int 1 array
 }Variavel;
@@ -29,6 +29,7 @@ int hash(Variavel v){
 void initializeTable(HashTable h){
     int i;
     for(i=0;i<HASHSIZE;i++){
+	h[i]->var.nome;
         h[i]->next = NULL;
     }
 }
@@ -37,8 +38,9 @@ void clearTable(HashTable h){
     initializeTable(h);
 }
  
+/*
 void insertVariavel(HashTable h, KeyType k, Info inf) {
-    int vhash=hash(k);
+    int vhash=hash(var.nome);
     Entry *aux,*novo;
  
     for (aux=h[vhash];(strcmp(aux->key,k)!=0);aux=aux->next){
@@ -75,7 +77,7 @@ Entry* retrieveTable_LP(HashTable h, KeyType k){
     for (aux=h[vhash];(strcmp(aux->key,k)!=0)&&aux!=NULL;aux=aux->next);
 return aux
 }
- 
+ */
 int main()
 {   
  

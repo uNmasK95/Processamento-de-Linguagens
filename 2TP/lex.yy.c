@@ -804,37 +804,37 @@ YY_RULE_SETUP
 case 7:
 YY_RULE_SETUP
 #line 17 "roj.l"
-{ return se; }
+{ return SE; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 18 "roj.l"
-{ return entao; }
+{ return ENTAO; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 19 "roj.l"
-{ return senao; }
+{ return SENAO; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 20 "roj.l"
-{ return fimse; }
+{ return FIMSE; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 21 "roj.l"
-{ return enquanto; }
+{ return ENQUANTO; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 22 "roj.l"
-{ return imprimir; }
+{ return IMPRIMIR; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 23 "roj.l"
-{ return ler; }
+{ return LER; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
