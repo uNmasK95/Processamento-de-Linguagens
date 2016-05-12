@@ -12,9 +12,10 @@
 %token INICIO FIM
 %token INSTINICIO INSTFIM
 %token VAR
-%token se entao senao fimse
-%token enquanto fimenquanto
-%token imprimir ler
+%token SE ENTAO SENAO FIMSE
+%token ENQUANTO FIMENQUANTO
+%token IMPRIMIR LER
+%token MOD
 %token DIFF GG LL GE LE EQ AND OR NOT
 %token <var>id
 %token <val>num
@@ -74,19 +75,20 @@ Op 		: '+'
 		| '/'
 		;
 
-Condicional	: se '(' Condicao ')' entao Instrucoes senao Instrucoes fimse
+Condicional	: SE '(' Condicao ')' ENTAO Instrucoes SENAO Instrucoes FIMSE
 		;
 
-Ciclo 		: enquanto '(' Condicao ')' entao Instrucoes fimenquanto
+Ciclo 		: ENQUANTO '(' Condicao ')' ENTAO Instrucoes FIMENQUANTO
 		;
 
-Input		: ler Variavel ';'
+Input		: LER Variavel ';'
 		;
 
-Output 		: imprimir Variavel ';'
+Output 		: IMPRIMIR Variavel ';'
 		;
 
-Condicao 	: Variavel DIFF Variavel
+Condicao 	: Variavel
+		| Variavel DIFF Variavel
 		| Variavel GG Variavel
 		| Variavel LL Variavel
 		| Variavel GE Variavel
