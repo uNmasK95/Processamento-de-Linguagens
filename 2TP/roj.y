@@ -35,13 +35,10 @@ Declaracoes	:
 		;
 
 Declaracao	: VAR id ';'
-		| VAR id '=' num ';'	
-		| VAR id Array ';'	
+		| VAR id '=' numero ';'
+		| VAR id '[' num ']' ';'	
+		| VAR id '[' num ']''[' num ']'  ';'	
 		;
-
-Array 		: '[' Valor ']'
-		| '[' Valor ']''[' Valor ']'
-		; 
 
 Body 		: 
 		| INSTINICIO Instrucoes INSTFIM
@@ -58,19 +55,40 @@ Instrucao 	: Atribuicao
 		| Ciclo
 		;
 
-Atribuicao 	: Variavel '=' Expressao ';'
-		| Variavel '=' Condicao ';'
+Atribuicao 	: Variavel '=' Condicao ';'
 		;
 
-Expressao 	: Valor
-		| Valor Op Valor
-		| '(' Expressao ')' Op Valor
-		| Valor Op '(' Expressao ')'
+Condicao	: Expressao
+		| Expressao OpRel Expressao
+		| NOT Expressao
 		;
 
-Op 		: '+'
+OpRel		: DIFF
+		| GG
+		| LL
+		| GE
+		| LE
+		| EQ
+		;
+
+Expressao	: Termo
+		| Expressao OpAdd Termo
+		;
+
+OpAdd		: '+'
 		| '-'
-		| '*'
+		;
+
+Termo 		: Forma
+		| Termo OpMul Forma
+		;
+
+Forma		: Valor 
+		| '(' Expressao ')'
+		; 
+
+
+OpMul		: '*'
 		| '/'
 		| '%'
 		;
@@ -81,31 +99,23 @@ Condicional	: SE '(' Condicao ')' ENTAO Instrucoes SENAO Instrucoes FIMSE
 Ciclo 		: ENQUANTO '(' Condicao ')' ENTAO Instrucoes FIMENQUANTO
 		;
 
-Input		: LER Variavel ';'
+Input		: LER Valor ';'
 		;
 
-Output 		: IMPRIMIR Variavel ';'
+Output 		: IMPRIMIR Valor ';'
 		;
 
-Condicao 	: Valor
-		| Valor DIFF Valor
-		| Valor GG Valor
-		| Valor LL Valor
-		| Valor GE Valor
-		| Valor LE Valor
-		| Valor EQ Valor
-		| Valor AND Valor
-		| Valor OR Valor
-		| NOT Condicao
-		;
-
-Valor		: num
+numero 		: num
 		| '-' num
+		;
+
+Valor		: numero
 		| Variavel
 		; 
 
 Variavel	: id
-		| id Array
+		| id '[' Expressao ']'
+		| id '[' Expressao ']''[' Expressao ']'
 		;
 
 %%

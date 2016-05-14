@@ -9,4 +9,11 @@ clean:
 lex.yy.c: roj.l
 	flex roj.l
 y.tab.c: roj.y
-	yacc -d roj.y 
+	yacc -d roj.y
+
+teste:	
+	./roj < Codigo\ em\ ROJ/contapares.roj
+	./roj < Codigo\ em\ ROJ/maior3.roj
+	./roj < Codigo\ em\ ROJ/matrix.roj
+	./roj < Codigo\ em\ ROJ/sort.roj
+	./roj < Codigo\ em\ ROJ/sum.roj 
