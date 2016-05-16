@@ -77,6 +77,8 @@ Expressao	: Termo
 
 OpAdd		: '+'
 		| '-'
+		| AND
+		| OR
 		;
 
 Termo 		: Forma
