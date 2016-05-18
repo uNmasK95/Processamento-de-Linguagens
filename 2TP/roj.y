@@ -1,13 +1,15 @@
 /*Linguagem de programção ROJ*/
 
 %{
+#include "hashtable.h"
 #include <stdio.h>
 #include <string.h>
 FILE *out_file;
 int currPointer=0;
 
-void declaracao(int tamanho, char* identficador, int value);
-
+void declaracao(int tamanho, char* identficador, int value, int dim);
+void fatal_error(char *s);
+HashTable tabela;
 
 %}
 
@@ -38,10 +40,10 @@ Declaracoes	:
 		| Declaracoes Declaracao
 		;
 
-Declaracao	: VAR id ';' 						{declaracao(0,$2,0);}
-		| VAR id '=' numero ';' 				{declaracao(0,$2,$4);}
-		| VAR id '[' num ']' ';' 				{declaracao($4,$2,0);}	
-		| VAR id '[' num ']''[' num ']'  ';'	{declaracao(($4*$7),$2,0);}
+Declaracao	: VAR id ';' 						{declaracao(0,$2,0,0);}
+		| VAR id '=' numero ';' 				{declaracao(0,$2,$4,0);}
+		| VAR id '[' num ']' ';' 				{declaracao($4,$2,0,1);}	
+		| VAR id '[' num ']''[' num ']'  ';'	{declaracao(($4*$7),$2,0,2);}
 		;
 
 Body 		: 
@@ -128,12 +130,40 @@ Variavel	: id
 #include "lex.yy.c"
 
 
-void declaracao(int tamanho, char* identficador, int value){
+void fatal_error(char *s){
+//    va_list ap;
+ //   va_start(ap, s);
+ //   char str[1024];
+//  vsprintf(str, s, ap);
+    yyerror(s);
+    fclose(out_file);
+//    remove(filename);
+    exit(0);
+}
+
+
+
+void declaracao(int tamanho, char* identficador, int value, int dim){
 	char* name =strdup(identficador);
+	//printf("Entreir aqui\n");
+	
 	//if(var_hash_get(&varHash, name) != NULL)
-	if(0)
+	printf("antes aqui\n");
+	if(getVariavel(tabela,name,VAR)!=NULL){
+	//if(0){
+		printf("Entreir aqui\n");
         fatal_error("Multiple variable definitions");
+    }
     else{
+    	printf("depois aqui\n");
+    	Definition def1 = (Definition)malloc(sizeof(struct definition));
+		def1->name=name;
+		def1->type=VAR;
+		def1->var = (Variavel)malloc(sizeof(struct variavel));
+		def1->var->addr=currPointer;
+		def1->var->dim= dim;
+		def1->var->size=tamanho;
+		insertVariavel(tabela,def1);
         if(tamanho>0){
             fprintf(out_file,"PUSHN %d\n", tamanho);
             //var_hash_put(&varHash, name, currPointer, size, array_var, currFunc);
@@ -160,6 +190,7 @@ int yyerror(char * mensagem) {
 
 int main() {
 	out_file = fopen("teste.txt","w");
+	tabela = createHashTable();
 	yyparse();
 	return 0;
 }

@@ -1,7 +1,7 @@
 #include "hashtable.h"
 
 int hash(char*name, int type){
-	printf("VHASH:%lu\n", (strlen(name)%HASHSIZE)+type);
+	//printf("VHASH:%lu\n", (strlen(name)%HASHSIZE)+type);
 	return (strlen(name)%HASHSIZE)+type;
 }
 
@@ -54,7 +54,7 @@ void insertVariavel(HashTable h, Definition def) {
 	}
 	return aux->def;
 }
-
+/*
 int main()
 {
 	printf("ola;");
@@ -79,4 +79,4 @@ int main()
 	printf("%d\n",def2->func->argc);
 
     	return 0;
-}
+}*/

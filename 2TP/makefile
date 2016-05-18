@@ -1,6 +1,6 @@
 default: roj clean
-roj: y.tab.c lex.yy.c 	
-	gcc -o roj y.tab.c 
+roj: y.tab.c lex.yy.c hashtable.o	
+	gcc  hashtable.o -o roj y.tab.c 
 clean: 
 	rm lex.yy.c
 	rm y.tab.h
@@ -17,3 +17,6 @@ teste:
 	./roj < Codigo\ em\ ROJ/matrix.roj
 	./roj < Codigo\ em\ ROJ/sort.roj
 	./roj < Codigo\ em\ ROJ/sum.roj 
+
+hashtable.o: hashtable.c hashtable.h
+	gcc -c hashtable.c

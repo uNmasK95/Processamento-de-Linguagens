@@ -3,6 +3,7 @@ INICIO
 	VAR b;
 	VAR c;
 	VAR g;
+	VAR b;
 INSTINICIO
 	g=-999;
 	LER a;

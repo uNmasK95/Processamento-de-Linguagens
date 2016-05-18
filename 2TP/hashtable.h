@@ -3,8 +3,6 @@
 #include <string.h>
 
 #define HASHSIZE 7919
-#define FUNC 0
-#define VAR 1
 
 typedef struct function {
   char* label; // ver melhor isto pode ser o nome da função o key name
