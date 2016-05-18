@@ -1,8 +1,16 @@
 #include "hashtable.h"
 
+#define FUNC 0
+#define VAR 1
+
 int hash(char*name, int type){
-	//printf("VHASH:%lu\n", (strlen(name)%HASHSIZE)+type);
-	return (strlen(name)%HASHSIZE)+type;
+	int i=0;
+	int val=0;
+	while (name[i]!='\0' ){
+		val +=name[i]*(i+1);
+		i++;
+	}
+	return (val%HASHSIZE);
 }
 
 void initializeTable(HashTable h){
@@ -48,8 +56,12 @@ void insertVariavel(HashTable h, Definition def) {
 
  Definition getVariavel(HashTable h, char* name, int type){
 	int vhash=hash(name,type);
-	Entry aux;
-	for(aux=h[vhash]; strcmp(aux->def->name,name)!=0 && aux->def->type!=type; aux=aux->next){
+	Entry aux=h[vhash];
+
+	if(aux->def==NULL){
+		return NULL;
+	}
+	for(; !(strcmp(aux->def->name,name)==0 && aux->def->type==type); aux=aux->next){
 		if(aux->next==NULL) { return NULL; }
 	}
 	return aux->def;
