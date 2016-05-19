@@ -15,9 +15,16 @@ char* pushNumero(int numero);
 char* pushVariavel(char* var);
 char* pushArray1D(char* var, char* expCod);
 char* pushArray2D(char* var, char* expCod1, char* expCod2);
-
+char* ler(char* op);
+char* imprimir(char* op);
+char* operacao(char* exp1, char* op, char* exp2);
+char* atribuicao(char* var, char* val);
+int loadADDR=0;
 
 %}
+
+
+
 
 %union{int val; char* var;}
 
@@ -42,7 +49,9 @@ char* pushArray2D(char* var, char* expCod1, char* expCod2);
 %type <var>Variavel
 %type <var>Fator
 %type <var>Termo
-
+%type <var>Output
+%type <var>Input
+%type <var>Endereco Instrucao Atribuicao OpRel Condicao Condicional Ciclo
 %%
 
 
@@ -56,83 +65,89 @@ Declaracoes	:
 Declaracao	: VAR id ';' 						{declaracao(1,$2,0,0);}
 		| VAR id '=' numero ';' 				{declaracao(1,$2,$4,0);}
 		| VAR id '[' num ']' ';' 				{declaracao($4,$2,0,1);}
-		| VAR id '[' num ']''[' num ']'  ';'	{declaracao(($4*$7),$2,0,2);}
+		| VAR id '[' num ']''[' num ']'  ';'	{declaracao(($4*$7),$2,0,$4);}
 		;
 
 Body 		:
-		| INSTINICIO {fprintf(out_file,"START\n");} Instrucoes INSTFIM {fprintf(out_file,"STOP\n");}
+		| INSTINICIO {fprintf(out_file,"start\n");} Instrucoes INSTFIM {fprintf(out_file,"stop\n");}
 		;
 
 Instrucoes	:
 		| Instrucoes Instrucao
 		;
 
-Instrucao 	: Atribuicao
-		| Condicional
-		| Input
-		| Output
-		| Ciclo
+Instrucao 	: Atribuicao		{ fprintf(out_file, "%s", $1); }
+		| Condicional						{ fprintf(out_file, "%s", $1); }
+		| Input									{ fprintf(out_file, "%s", $1); }
+		| Output								{ fprintf(out_file, "%s", $1); }
+		| Ciclo									{ fprintf(out_file, "%s", $1); }
 		;
 
-Atribuicao 	: Variavel '=' Condicao ';' // { atribuicao($1,$2); } // a variavel te de vir com o enderesso de memoria
+Atribuicao 	: Endereco '=' Condicao ';'		{ $$ = atribuicao($1,$3); }
 		;
 
-Condicao	: Expressao
-		| Expressao OpRel Expressao
-		| NOT Expressao
+Condicao	: Expressao							{ $$ = $1; }
+		| Expressao OpRel Expressao		{ $$ = operacao($1,$2,$3); }
+		| NOT Expressao								{ $$ = operacao($2,"\tNOT\n",""); }
 		;
 
-OpRel		: DIFF
-		| GG
-		| LL
-		| GE
-		| LE
-		| EQ
+OpRel		: DIFF			{ $$ = "\tEQUAL\n\tNOT\n";}
+		| GG						{ $$ = "\tSUP\n"; }
+		| LL						{ $$ = "\tINF\n"; }
+		| GE						{ $$ = "\tSUPEQ\n"; }
+		| LE						{ $$ = "\tINFEQ\n"; }
+		| EQ						{ $$ = "\tEQUAL\n"; }
 		;
 
-Expressao	: Termo								{ $$=$1; }
-		| Expressao OpAdd Termo			{ }
+Expressao	: Termo								{ $$ = $1; }
+		| Expressao OpAdd Termo			{ $$ = operacao($1,$2,$3); }
 		;
 
-OpAdd		: '+'		{ $$="\tADD\n"; }
-		| '-'				{ $$="\tSUB\n"; }
-		| AND				{ $$="\tMUL\n"; } //multiplica os valor e tem de ser igual a 1 para ser verdade
-		| OR				{ $$="\tADD\n"; }
+OpAdd		: '+'		{ $$="\tadd\n"; }
+		| '-'				{ $$="\tsub\n"; }
+		| AND				{ $$="\tmul\n"; } //multiplica os valor e tem de ser igual a 1 para ser verdade
+		| OR				{ $$="\tadd\n"; }
 		;
 
-Termo 		: Fator
-		| Termo OpMul Fator
+Termo 		: Fator							{ $$ = $1;}
+		| Termo OpMul Fator				{ $$ = operacao($1,$2,$3); }
 		;
 
-Fator		: Valor						{ $$=$1; }
+Fator		: Valor						{ $$ = $1; }
 		| '(' Expressao ')'		{ $$ = $2; }
 		;
 
 
-OpMul		: '*'		{ $$="\tMUL\n"; }
-		| '/'				{ $$="\tDIV\n"; }
-		| '%'				{ $$="\tMOD\n"; }
+OpMul		: '*'		{ $$ = "\tmul\n"; }
+		| '/'				{ $$ = "\tdiv\n"; }
+		| '%'				{ $$ = "\tmod\n"; }
 		;
 
-Condicional	: SE '(' Condicao ')' ENTAO Instrucoes SENAO Instrucoes FIMSE
+Condicional	: SE '(' Condicao ')' ENTAO Instrucoes SENAO Instrucoes FIMSE				{ $$="";}
 		;
 
-Ciclo 		: ENQUANTO '(' Condicao ')' ENTAO Instrucoes FIMENQUANTO
+Ciclo 		: ENQUANTO '(' Condicao ')' ENTAO Instrucoes FIMENQUANTO							{ $$="";}
 		;
 
-Input		: LER Valor ';'
+Input		: LER Endereco ';'		{ $$ = ler($2); }
 		;
 
-Output 		: IMPRIMIR Valor ';'
+Output 		: IMPRIMIR Valor ';'	{ $$ = imprimir($2); }
 		;
 
-numero 		: num {$$=$1;}
-		| '-' num {$$=-1*$2;}
+numero 		: num 		{ $$=$1; }
+		| '-' num 			{ $$=-1*$2; }
 		;
 
 Valor		: numero		{ $$ = pushNumero($1);}
 		| Variavel			{ $$=$1; }
 		;
+
+Endereco	: id																	{ loadADDR = 1; $$ = pushVariavel($1); loadADDR=0;}
+		| id '[' Expressao ']'											{ loadADDR = 1; $$ = pushArray1D($1,$3); loadADDR=0; }
+		| id '[' Expressao ']''[' Expressao ']'			{ loadADDR = 1; $$ = pushArray2D($1,$3,$6); loadADDR=0; }
+		;
+
 
 Variavel	: id																	{ $$ = pushVariavel($1); }
 		| id '[' Expressao ']'											{ $$ = pushArray1D($1,$3); }
@@ -149,38 +164,82 @@ void fatal_error(char *s){
     exit(0);
 }
 
+char* atribuicao(char* var, char* val){
+	char instrucao[10000];
+	sprintf(instrucao,"%s%s\tstore 0\n",var,val);
+	return strdup(instrucao);
+}
+
+char* operacao(char* exp1, char* op, char* exp2){
+	char instrucao[10000];
+	sprintf(instrucao,"%s%s%s",exp1,exp2,op);
+	return strdup(instrucao);
+}
+
+char* imprimir(char* op){
+	char instrucao[10000];
+	sprintf(instrucao,"%s\twritei\n",op);
+	return strdup(instrucao);
+}
+
+//" READ ATOI STOR"
+char* ler(char* op){
+	char instrucao[1000];
+	sprintf(instrucao,"%s\tread\n\tatoi\n\tstore 0\n",op);
+	return strdup(instrucao);
+}
+
 char* pushNumero(int numero){
 	char instrucao[100];
-	sprintf(instrucao,"\tPUSHI %d",numero);
+	sprintf(instrucao,"\tpushi %d\n",numero);
 	return strdup(instrucao);
 }
 
 char* pushVariavel(char* var){
-	char operacao[20];
+	char operacao[100];
 	Definition def;
 	if((def = getVariavel(tabela,var,1))==NULL){
 		fatal_error("Variavel não defenida"); //ver isto que dá erro
 	}else{
-		sprintf(operacao,"PUSHG %d\n",def->var->addr);
+		if(loadADDR==1){
+			//para colocar na stack o endereço
+			sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n",def->var->addr);
+		}else{
+			sprintf(operacao,"\tpushg %d\n",def->var->addr);
+		}
 	}
 	return strdup(operacao);
 }
 
 
 char* pushArray1D(char* var, char* expCod){
-	char operacao[100];
+	char operacao[1000];
 	Definition def;
 	if((def = getVariavel(tabela,var,1))==NULL){
 		fatal_error("Variavel não defenida");
 	}else{
-		sprintf(operacao,"%s PUSHG %d\n ADD\n PUSHG",expCod, def->var->addr);
+		if(loadADDR==1){
+			sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n%s\tpadd\n",def->var->addr,expCod);
+		}else{
+			sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n%s\tloadn\n",def->var->addr,expCod);
+		}
 	}
 	return strdup(operacao);
 }
+//Isto não está bem ver melhor isto
 char* pushArray2D(char* var, char* expCod1, char* expCod2){
 	//colei a de cima só para não dar erro
-	char operacao[100];
-
+	char operacao[1000];
+	Definition def;
+	if((def = getVariavel(tabela,var,1))==NULL){
+		fatal_error("Variavel não defenida");
+	}else{
+		if(loadADDR==1){
+			sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n%s\tpushi %d\n\tmul\n%s\tadd\n\tpadd\n",def->var->addr,expCod1,(def->var->size/def->var->dim),expCod2);
+		}else{
+			sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n%s\tpushi %d\n\tmul\n %s\tadd\n\tloadn\n",def->var->addr,expCod1,(def->var->size/def->var->dim),expCod2);
+		}
+	}
 	return strdup(operacao);
 }
 
@@ -190,8 +249,8 @@ void declaracao(int tamanho, char* identficador, int value, int dim){
 	if(getVariavel(tabela,name,1)!=NULL){
         fatal_error("Multiple variable definitions");
     }
-    else{
-    	Definition def1 = (Definition)malloc(sizeof(struct definition));
+  else{
+    Definition def1 = (Definition)malloc(sizeof(struct definition));
 		def1->name=name;
 		def1->type=1;
 		def1->var = (Variavel)malloc(sizeof(struct variavel));
@@ -199,19 +258,15 @@ void declaracao(int tamanho, char* identficador, int value, int dim){
 		def1->var->dim= dim;
 		def1->var->size=tamanho;
 		insertVariavel(tabela,def1);
-        if(tamanho>0){
-            fprintf(out_file,"PUSHN %d\n", tamanho);
-            currPointer+= tamanho;
-        }
-        else{
-        	if(value!=0){
-        		fprintf(out_file,"PUSHI %d\n",value);
-        	}else{
-        		fprintf(out_file,"PUSHI 0\n");
-        	}
-            currPointer++;
-        }
+    if(tamanho>1){
+        fprintf(out_file,"\tpushn %d\n", tamanho);
+        currPointer+= tamanho;
     }
+    else{
+    		fprintf(out_file,"\tpushi %d\n",value);
+        currPointer++;
+    }
+  }
 }
 
 
@@ -220,9 +275,13 @@ int yyerror(char * mensagem) {
 	return 0;
 }
 
-int main() {
-	out_file = fopen("teste.txt","w");
-	tabela = createHashTable();
-	yyparse();
+int main(int argc, char** argv) {
+	if(argc>=1){
+		out_file = fopen(argv[1],"w");
+		tabela = createHashTable();
+		yyparse();
+	}else{
+		printf("Nessecita de introduzir o ficheiro.roj\n");
+	}
 	return 0;
 }

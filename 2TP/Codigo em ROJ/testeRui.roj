@@ -1,0 +1,12 @@
+INICIO
+VAR a=5;
+VAR b;
+INSTINICIO
+
+a=a+10;
+b=a AND a EQ 15;
+IMPRIMIR a;
+
+INSTFIM
+
+FIM

@@ -1,0 +1,22 @@
+	pushi 5
+	pushi 0
+start
+	pushgp
+	pushi 0
+	padd
+	pushg 0
+	pushi 10
+	add
+	store 0
+	pushgp
+	pushi 1
+	padd
+	pushg 0
+	pushg 0
+	mul
+	pushi 15
+	EQUAL
+	store 0
+	pushg 0
+	writei
+stop
