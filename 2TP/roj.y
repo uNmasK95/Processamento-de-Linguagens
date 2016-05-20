@@ -19,7 +19,18 @@ char* ler(char* op);
 char* imprimir(char* op);
 char* operacao(char* exp1, char* op, char* exp2);
 char* atribuicao(char* var, char* val);
+char* condicional(char* cond, char* then, char* els);
+char* ciclo(char* cond, char* inst);
+char* concat(char* exp1, char* exp2);
+char* concatGlobal(char* exp);
 int loadADDR=0;
+int labelIF=0;
+int labelWHILE=0;
+char instGlobal[200000];
+
+char* stackStrings[30];
+int nivel=0;
+
 
 %}
 
@@ -38,9 +49,6 @@ int loadADDR=0;
 %token <var>id
 %token <val>num
 
-
-//%type <val>Expressao
-//%type <val>Condicao
 %type <val>numero
 %type <var>OpAdd
 %type <var>OpMul
@@ -51,7 +59,8 @@ int loadADDR=0;
 %type <var>Termo
 %type <var>Output
 %type <var>Input
-%type <var>Endereco Instrucao Atribuicao OpRel Condicao Condicional Ciclo
+%type <var>Endereco Instrucao Atribuicao OpLog Condicao Condicional Ciclo
+%type <var>Instrucoes
 %%
 
 
@@ -62,41 +71,38 @@ Declaracoes	:
 		| Declaracoes Declaracao
 		;
 
-Declaracao	: VAR id ';' 						{declaracao(1,$2,0,0);}
-		| VAR id '=' numero ';' 				{declaracao(1,$2,$4,0);}
-		| VAR id '[' num ']' ';' 				{declaracao($4,$2,0,1);}
-		| VAR id '[' num ']''[' num ']'  ';'	{declaracao(($4*$7),$2,0,$4);}
+Declaracao	: VAR id ';' 									{ declaracao(1,$2,0,0); }
+		| VAR id '=' numero ';' 							{ declaracao(1,$2,$4,0); }
+		| VAR id '[' num ']' ';' 							{ declaracao($4,$2,0,1); }
+		| VAR id '[' num ']''[' num ']'  ';'	{ declaracao(($4*$7),$2,0,$4); }
 		;
 
 Body 		:
-		| INSTINICIO {fprintf(out_file,"start\n");} Instrucoes INSTFIM {fprintf(out_file,"stop\n");}
+		| INSTINICIO { fprintf(out_file,"start\n"); } Instrucoes INSTFIM { fprintf(out_file, "%s", instGlobal); fprintf(out_file,"stop\n"); }
 		;
 
 Instrucoes	:
-		| Instrucoes Instrucao
+		| Instrucoes Instrucao	{ $$=concatGlobal($2); }
 		;
 
-Instrucao 	: Atribuicao		{ fprintf(out_file, "%s", $1); }
-		| Condicional						{ fprintf(out_file, "%s", $1); }
-		| Input									{ fprintf(out_file, "%s", $1); }
-		| Output								{ fprintf(out_file, "%s", $1); }
-		| Ciclo									{ fprintf(out_file, "%s", $1); }
+Instrucao 	: Atribuicao		{ $$ = $1; }
+		| Condicional						{ $$ = $1; }
+		| Input									{ $$ = $1; }
+		| Output								{ $$ = $1; }
+		| Ciclo									{ $$ = $1; }
 		;
 
 Atribuicao 	: Endereco '=' Condicao ';'		{ $$ = atribuicao($1,$3); }
 		;
 
 Condicao	: Expressao							{ $$ = $1; }
-		| Expressao OpRel Expressao		{ $$ = operacao($1,$2,$3); }
+		| Expressao OpLog Expressao		{ $$ = operacao($1,$2,$3); }
 		| NOT Expressao								{ $$ = operacao($2,"\tNOT\n",""); }
 		;
 
-OpRel		: DIFF			{ $$ = "\tEQUAL\n\tNOT\n";}
-		| GG						{ $$ = "\tSUP\n"; }
-		| LL						{ $$ = "\tINF\n"; }
-		| GE						{ $$ = "\tSUPEQ\n"; }
-		| LE						{ $$ = "\tINFEQ\n"; }
-		| EQ						{ $$ = "\tEQUAL\n"; }
+
+OpLog		: AND				{ $$="\tmul\n"; } //multiplica os valor e tem de ser igual a 1 para ser verdade
+		| OR						{ $$="\tadd\n"; }
 		;
 
 Expressao	: Termo								{ $$ = $1; }
@@ -105,8 +111,12 @@ Expressao	: Termo								{ $$ = $1; }
 
 OpAdd		: '+'		{ $$="\tadd\n"; }
 		| '-'				{ $$="\tsub\n"; }
-		| AND				{ $$="\tmul\n"; } //multiplica os valor e tem de ser igual a 1 para ser verdade
-		| OR				{ $$="\tadd\n"; }
+		| DIFF			{ $$ = "\tequal\n\tnot\n";}
+		| GG				{ $$ = "\tsup\n"; }
+		| LL				{ $$ = "\tinf\n"; }
+		| GE				{ $$ = "\tsupeq\n"; }
+		| LE				{ $$ = "\tinfeq\n"; }
+		| EQ				{ $$ = "\tequal\n"; }
 		;
 
 Termo 		: Fator							{ $$ = $1;}
@@ -123,10 +133,10 @@ OpMul		: '*'		{ $$ = "\tmul\n"; }
 		| '%'				{ $$ = "\tmod\n"; }
 		;
 
-Condicional	: SE '(' Condicao ')' ENTAO Instrucoes SENAO Instrucoes FIMSE				{ $$="";}
+Condicional	: SE '(' Condicao ')' ENTAO Instrucoes SENAO Instrucoes FIMSE				{ $$=condicional($3,$6,$8); }
 		;
 
-Ciclo 		: ENQUANTO '(' Condicao ')' ENTAO Instrucoes FIMENQUANTO							{ $$="";}
+Ciclo 		: ENQUANTO '(' Condicao ')' ENTAO Instrucoes FIMENQUANTO							{ $$=ciclo($3,$6); }
 		;
 
 Input		: LER Endereco ';'		{ $$ = ler($2); }
@@ -157,11 +167,40 @@ Variavel	: id																	{ $$ = pushVariavel($1); }
 %%
 #include "lex.yy.c"
 
+push(char* inst){
+	stackStrings[nivel++;]=strdup(inst);
+}
+
+char* pop(){
+	return strdup(stackStrings[nivel--]);
+}
+
 
 void fatal_error(char *s){
     yyerror(s);
     fclose(out_file);
     exit(0);
+}
+
+char* concatGlobal(char* exp){
+	sprintf(instGlobal,"%s%s",instGlobal,exp);
+	return strdup(instGlobal);
+}
+
+char* concat(char* exp1, char* exp2){
+	char instrucao[1000000];
+	sprintf(instrucao,"%s%s",exp1,exp2);
+	return strdup(instrucao);
+}
+
+char* condicional(char* cond, char* then, char* els){
+	char instrucao[1000000];
+	sprintf(instrucao,"%s\tjz labelif%d\n%s\tjumb labelfim%d\nlabelif%d:\n%slabelfim%d:\n",cond,labelIF,then,labelIF,labelIF,els,labelIF);
+	labelIF++;
+	return strdup(instrucao);
+}
+char* ciclo(char* cond, char* inst){
+return NULL;
 }
 
 char* atribuicao(char* var, char* val){
@@ -277,6 +316,7 @@ int yyerror(char * mensagem) {
 
 int main(int argc, char** argv) {
 	if(argc>=1){
+		instGlobal[0]='\0';
 		out_file = fopen(argv[1],"w");
 		tabela = createHashTable();
 		yyparse();

@@ -1,11 +1,21 @@
 INICIO
 VAR a=5;
-VAR b;
+VAR b=1;
+VAR c;
+VAR d;
 INSTINICIO
 
-a=a+10;
-b=a AND a EQ 15;
-IMPRIMIR a;
+d= b LL a;
+
+SE ( b LL a )
+ENTAO
+c=32;
+c=4;
+t=10;
+SENAO
+c=4;
+FIMSE
+IMPRIMIR c;
 
 INSTFIM
 

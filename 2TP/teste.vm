@@ -1,22 +1,61 @@
 	pushi 5
+	pushi 1
+	pushi 0
 	pushi 0
 start
 	pushgp
-	pushi 0
+	pushi 3
 	padd
+	pushg 1
 	pushg 0
-	pushi 10
-	add
+	inf
 	store 0
 	pushgp
-	pushi 1
+	pushi 2
 	padd
-	pushg 0
-	pushg 0
-	mul
-	pushi 15
-	EQUAL
+	pushi 32
 	store 0
+	pushgp
+	pushi 2
+	padd
+	pushi 4
+	store 0
+	pushg 1
 	pushg 0
+	inf
+	jz labelif0
+	pushgp
+	pushi 3
+	padd
+	pushg 1
+	pushg 0
+	inf
+	store 0
+	pushgp
+	pushi 2
+	padd
+	pushi 32
+	store 0
+	jumb labelfim0
+labelif0:
+	pushgp
+	pushi 3
+	padd
+	pushg 1
+	pushg 0
+	inf
+	store 0
+	pushgp
+	pushi 2
+	padd
+	pushi 32
+	store 0
+	pushgp
+	pushi 2
+	padd
+	pushi 4
+	store 0
+labelfim0:
+	pushg 2
 	writei
 stop
