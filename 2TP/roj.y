@@ -19,18 +19,21 @@ char* ler(char* op);
 char* imprimir(char* op);
 char* operacao(char* exp1, char* op, char* exp2);
 char* atribuicao(char* var, char* val);
-char* condicional(char* cond, char* then, char* els);
-char* ciclo(char* cond, char* inst);
+char* condicional(char* cond);
+char* ciclo(char* cond);
 char* concat(char* exp1, char* exp2);
-char* concatGlobal(char* exp);
+char* concatGlobal();
+void push(char* inst);
+char* pop();
+
 int loadADDR=0;
 int labelIF=0;
 int labelWHILE=0;
-char instGlobal[200000];
 
 char* stackStrings[30];
+int aminhamentoNumeroInst[100];
 int nivel=0;
-
+int aninhamento=0;
 
 %}
 
@@ -78,11 +81,11 @@ Declaracao	: VAR id ';' 									{ declaracao(1,$2,0,0); }
 		;
 
 Body 		:
-		| INSTINICIO { fprintf(out_file,"start\n"); } Instrucoes INSTFIM { fprintf(out_file, "%s", instGlobal); fprintf(out_file,"stop\n"); }
+		| INSTINICIO { fprintf(out_file,"start\n"); } Instrucoes INSTFIM { fprintf(out_file, "%s", concatGlobal()); fprintf(out_file,"stop\n"); }
 		;
 
 Instrucoes	:
-		| Instrucoes Instrucao	{ $$=concatGlobal($2); }
+		| Instrucoes Instrucao	{ printf("INSTURÇOES%s\n",$2);push($2); }
 		;
 
 Instrucao 	: Atribuicao		{ $$ = $1; }
@@ -97,7 +100,7 @@ Atribuicao 	: Endereco '=' Condicao ';'		{ $$ = atribuicao($1,$3); }
 
 Condicao	: Expressao							{ $$ = $1; }
 		| Expressao OpLog Expressao		{ $$ = operacao($1,$2,$3); }
-		| NOT Expressao								{ $$ = operacao($2,"\tNOT\n",""); }
+		| NOT Expressao								{ $$ = operacao($2,"\tnot\n",""); }
 		;
 
 
@@ -133,10 +136,10 @@ OpMul		: '*'		{ $$ = "\tmul\n"; }
 		| '%'				{ $$ = "\tmod\n"; }
 		;
 
-Condicional	: SE '(' Condicao ')' ENTAO Instrucoes SENAO Instrucoes FIMSE				{ $$=condicional($3,$6,$8); }
+Condicional	: SE '(' Condicao ')' ENTAO { printf("NUMERODEINSTRUÇOES aninhamento %d->%d\n",aninhamento,nivel);aminhamentoNumeroInst[aninhamento++]=nivel; } Instrucoes SENAO { printf("NUMERODEINSTRUÇOES aninhamento %d->%d\n",aninhamento,nivel); aminhamentoNumeroInst[aninhamento++]=nivel; } Instrucoes FIMSE				{ $$=condicional($3); }
 		;
 
-Ciclo 		: ENQUANTO '(' Condicao ')' ENTAO Instrucoes FIMENQUANTO							{ $$=ciclo($3,$6); }
+Ciclo	: ENQUANTO '(' Condicao ')' ENTAO { aminhamentoNumeroInst[aninhamento++]=nivel; } Instrucoes FIMENQUANTO							{ $$=ciclo($3); }
 		;
 
 Input		: LER Endereco ';'		{ $$ = ler($2); }
@@ -167,12 +170,13 @@ Variavel	: id																	{ $$ = pushVariavel($1); }
 %%
 #include "lex.yy.c"
 
-push(char* inst){
-	stackStrings[nivel++;]=strdup(inst);
+void push(char* inst){
+	stackStrings[nivel++]=strdup(inst);
 }
 
 char* pop(){
-	return strdup(stackStrings[nivel--]);
+	printf("POP\n");
+	return strdup(stackStrings[--nivel]);
 }
 
 
@@ -182,9 +186,23 @@ void fatal_error(char *s){
     exit(0);
 }
 
-char* concatGlobal(char* exp){
-	sprintf(instGlobal,"%s%s",instGlobal,exp);
-	return strdup(instGlobal);
+char* concatGlobal(){
+	char instrucao[1000000];
+	int i;
+	instrucao[0]='\0';
+	printf("PRIMEIRO%s\n",stackStrings[0]);
+	printf("SEGUNDO%s\n",stackStrings[1]);
+	printf("TERCEIRO%s\n",stackStrings[2]);
+
+	printf("TOTALNIVEL%d\n",nivel );
+
+	for(i=0;i<nivel;i++){
+		sprintf(instrucao,"%s%s",instrucao,stackStrings[i]);
+		printf("NIVEL:%d\n",nivel );
+		printf("ACONPANHAR%s\n",instrucao );
+	}
+	printf("TESTEINSTRUÇÂO\n%s\n",instrucao );
+	return strdup(instrucao);
 }
 
 char* concat(char* exp1, char* exp2){
@@ -193,13 +211,41 @@ char* concat(char* exp1, char* exp2){
 	return strdup(instrucao);
 }
 
-char* condicional(char* cond, char* then, char* els){
+char* condicional(char* cond){
 	char instrucao[1000000];
-	sprintf(instrucao,"%s\tjz labelif%d\n%s\tjumb labelfim%d\nlabelif%d:\n%slabelfim%d:\n",cond,labelIF,then,labelIF,labelIF,els,labelIF);
+	char then[10000];
+	char ifELSE[10000];
+	int i, nInst;
+
+	then[0]='\0';
+	ifELSE[0]='\0';
+
+	//cuidado que vai ir a posição -1
+	nInst = aminhamentoNumeroInst[aninhamento-1]-aminhamentoNumeroInst[aninhamento-2];
+	printf("ANINHAMENTOELSE%d->%d\n",aminhamentoNumeroInst[aninhamento-1],aminhamentoNumeroInst[aninhamento-2] );
+	printf("ELSE->Numero de vez que tenho de fazer pop %d\n", nInst);
+	for(i=0;i<nInst;i++){
+		//atenção a ordem primeiro imprimir a instrução que está
+		sprintf(ifELSE,"%s%s",ifELSE,pop());
+	}
+	aninhamento--;
+
+	//fazer o then agora
+	printf("ANINHAMENTOTHEN%d->%d\n",aminhamentoNumeroInst[aninhamento-1],aminhamentoNumeroInst[aninhamento-2] );
+	nInst = aminhamentoNumeroInst[aninhamento-1]-aminhamentoNumeroInst[aninhamento-2];
+	printf("THEN->Numero de vez que tenho de fazer pop %d\n", nInst);
+	for(i=0;i<nInst;i++){
+		//atenção a ordem primeiro imprimir a instrução que está
+		sprintf(then,"%s%s",then,pop());
+	}
+	aninhamento--;
+
+	sprintf(instrucao,"%s\tjz labelif%d\n%s\tjumb labelfim%d\nlabelif%d:\n%slabelfim%d:\n",cond,labelIF,then,labelIF,labelIF,ifELSE,labelIF);
 	labelIF++;
+	printf("IF%s\n",instrucao );
 	return strdup(instrucao);
 }
-char* ciclo(char* cond, char* inst){
+char* ciclo(char* cond){
 return NULL;
 }
 
@@ -316,7 +362,6 @@ int yyerror(char * mensagem) {
 
 int main(int argc, char** argv) {
 	if(argc>=1){
-		instGlobal[0]='\0';
 		out_file = fopen(argv[1],"w");
 		tabela = createHashTable();
 		yyparse();

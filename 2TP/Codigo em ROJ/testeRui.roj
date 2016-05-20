@@ -3,17 +3,20 @@ VAR a=5;
 VAR b=1;
 VAR c;
 VAR d;
+VAR e;
 INSTINICIO
 
-d= b LL a;
+
+d = b LL a;
+e= b GG a;
 
 SE ( b LL a )
 ENTAO
 c=32;
-c=4;
-t=10;
+d=5;
 SENAO
 c=4;
+c=3;
 FIMSE
 IMPRIMIR c;
 

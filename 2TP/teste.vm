@@ -2,6 +2,7 @@
 	pushi 1
 	pushi 0
 	pushi 0
+	pushi 0
 start
 	pushgp
 	pushi 3
@@ -11,14 +12,11 @@ start
 	inf
 	store 0
 	pushgp
-	pushi 2
-	padd
-	pushi 32
-	store 0
-	pushgp
-	pushi 2
-	padd
 	pushi 4
+	padd
+	pushg 1
+	pushg 0
+	sup
 	store 0
 	pushg 1
 	pushg 0
@@ -27,9 +25,7 @@ start
 	pushgp
 	pushi 3
 	padd
-	pushg 1
-	pushg 0
-	inf
+	pushi 5
 	store 0
 	pushgp
 	pushi 2
@@ -39,16 +35,9 @@ start
 	jumb labelfim0
 labelif0:
 	pushgp
-	pushi 3
-	padd
-	pushg 1
-	pushg 0
-	inf
-	store 0
-	pushgp
 	pushi 2
 	padd
-	pushi 32
+	pushi 3
 	store 0
 	pushgp
 	pushi 2
