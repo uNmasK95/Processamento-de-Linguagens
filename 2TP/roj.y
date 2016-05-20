@@ -85,7 +85,7 @@ Body 		:
 		;
 
 Instrucoes	:
-		| Instrucoes Instrucao	{ printf("INSTURÇOES%s\n",$2);push($2); }
+		| Instrucoes Instrucao	{ push($2); }
 		;
 
 Instrucao 	: Atribuicao		{ $$ = $1; }
@@ -136,7 +136,7 @@ OpMul		: '*'		{ $$ = "\tmul\n"; }
 		| '%'				{ $$ = "\tmod\n"; }
 		;
 
-Condicional	: SE '(' Condicao ')' ENTAO { printf("NUMERODEINSTRUÇOES aninhamento %d->%d\n",aninhamento,nivel);aminhamentoNumeroInst[aninhamento++]=nivel; } Instrucoes SENAO { printf("NUMERODEINSTRUÇOES aninhamento %d->%d\n",aninhamento,nivel); aminhamentoNumeroInst[aninhamento++]=nivel; } Instrucoes FIMSE				{ $$=condicional($3); }
+Condicional	: SE '(' Condicao ')' ENTAO { aminhamentoNumeroInst[aninhamento++]=nivel; } Instrucoes SENAO { aminhamentoNumeroInst[aninhamento++]=nivel; } Instrucoes FIMSE				{ $$=condicional($3); }
 		;
 
 Ciclo	: ENQUANTO '(' Condicao ')' ENTAO { aminhamentoNumeroInst[aninhamento++]=nivel; } Instrucoes FIMENQUANTO							{ $$=ciclo($3); }
@@ -175,8 +175,9 @@ void push(char* inst){
 }
 
 char* pop(){
-	printf("POP\n");
-	return strdup(stackStrings[--nivel]);
+	char* aux = strdup(stackStrings[--nivel]);
+	stackStrings[nivel]=NULL;
+	return aux;
 }
 
 
@@ -190,18 +191,9 @@ char* concatGlobal(){
 	char instrucao[1000000];
 	int i;
 	instrucao[0]='\0';
-	printf("PRIMEIRO%s\n",stackStrings[0]);
-	printf("SEGUNDO%s\n",stackStrings[1]);
-	printf("TERCEIRO%s\n",stackStrings[2]);
-
-	printf("TOTALNIVEL%d\n",nivel );
-
 	for(i=0;i<nivel;i++){
 		sprintf(instrucao,"%s%s",instrucao,stackStrings[i]);
-		printf("NIVEL:%d\n",nivel );
-		printf("ACONPANHAR%s\n",instrucao );
 	}
-	printf("TESTEINSTRUÇÂO\n%s\n",instrucao );
 	return strdup(instrucao);
 }
 
@@ -220,34 +212,48 @@ char* condicional(char* cond){
 	then[0]='\0';
 	ifELSE[0]='\0';
 
-	//cuidado que vai ir a posição -1
-	nInst = aminhamentoNumeroInst[aninhamento-1]-aminhamentoNumeroInst[aninhamento-2];
-	printf("ANINHAMENTOELSE%d->%d\n",aminhamentoNumeroInst[aninhamento-1],aminhamentoNumeroInst[aninhamento-2] );
-	printf("ELSE->Numero de vez que tenho de fazer pop %d\n", nInst);
-	for(i=0;i<nInst;i++){
-		//atenção a ordem primeiro imprimir a instrução que está
-		sprintf(ifELSE,"%s%s",ifELSE,pop());
-	}
-	aninhamento--;
+	aminhamentoNumeroInst[aninhamento++]=nivel;
 
-	//fazer o then agora
-	printf("ANINHAMENTOTHEN%d->%d\n",aminhamentoNumeroInst[aninhamento-1],aminhamentoNumeroInst[aninhamento-2] );
-	nInst = aminhamentoNumeroInst[aninhamento-1]-aminhamentoNumeroInst[aninhamento-2];
-	printf("THEN->Numero de vez que tenho de fazer pop %d\n", nInst);
-	for(i=0;i<nInst;i++){
-		//atenção a ordem primeiro imprimir a instrução que está
-		sprintf(then,"%s%s",then,pop());
-	}
 	aninhamento--;
+	nInst = aminhamentoNumeroInst[aninhamento]-aminhamentoNumeroInst[aninhamento-1];
+	for(i=0;i<nInst;i++){
+		char* aux = strdup(ifELSE);
+		sprintf(ifELSE,"%s%s",pop(),aux);
+	}
 
-	sprintf(instrucao,"%s\tjz labelif%d\n%s\tjumb labelfim%d\nlabelif%d:\n%slabelfim%d:\n",cond,labelIF,then,labelIF,labelIF,ifELSE,labelIF);
+	aninhamento--;
+	nInst = aminhamentoNumeroInst[aninhamento]-aminhamentoNumeroInst[aninhamento-1];
+	for(i=0;i<nInst;i++){
+		char* aux = strdup(then);
+		sprintf(then,"%s%s",pop(),aux);
+	}
+	sprintf(instrucao,"%s\tjz labelif%d\n%s\tjump labelfim%d\nlabelif%d:\n%slabelIFfim%d:\n",cond,labelIF,then,labelIF,labelIF,ifELSE,labelIF);
 	labelIF++;
-	printf("IF%s\n",instrucao );
 	return strdup(instrucao);
 }
+
+
+
+
 char* ciclo(char* cond){
-return NULL;
+	char instrucao[1000000];
+	char then[10000];
+	int i, nInst;
+
+	aminhamentoNumeroInst[aninhamento++]=nivel;
+	aninhamento--;
+	nInst = aminhamentoNumeroInst[aninhamento]-aminhamentoNumeroInst[aninhamento-1];
+	for(i=0;i<nInst;i++){
+		char* aux = strdup(then);
+		sprintf(then,"%s%s",pop(),aux);
+	}
+
+	sprintf(instrucao,"labelWH%d\n%s\tjz labelWHfim%d\n%s\tjump labelWH%d\nlabelWHfim%d:\n",labelWHILE,cond,labelWHILE,then,labelWHILE,labelWHILE);
+	labelWHILE++;
+	return strdup(instrucao);
 }
+
+
 
 char* atribuicao(char* var, char* val){
 	char instrucao[10000];

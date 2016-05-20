@@ -1,0 +1,25 @@
+INICIO
+VAR a=2;
+VAR b=0;
+VAR c=0;
+VAR d;
+VAR e=2;
+VAR f=1;
+VAR i=0;
+INSTINICIO
+
+
+d = b LL a;
+ENQUANTO ( b LL a )
+ENTAO
+  c=c+1;
+  b=b+1;
+FIMENQUANTO
+
+
+IMPRIMIR c;
+IMPRIMIR f;
+
+INSTFIM
+
+FIM

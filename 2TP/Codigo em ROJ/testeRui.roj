@@ -4,19 +4,28 @@ VAR b=1;
 VAR c;
 VAR d;
 VAR e;
+VAR f;
 INSTINICIO
 
 
 d = b LL a;
-e= b GG a;
 
 SE ( b LL a )
 ENTAO
-c=32;
-d=5;
+  SE (a EQ 5)
+  ENTAO
+    SE (a EQ 4)
+    ENTAO
+      c=54;
+    SENAO
+      c=23;
+    FIMSE
+  SENAO
+    c=13;
+  FIMSE
 SENAO
-c=4;
-c=3;
+  c=4;
+  c=3;
 FIMSE
 IMPRIMIR c;
 

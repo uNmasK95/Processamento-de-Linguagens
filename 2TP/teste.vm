@@ -1,7 +1,9 @@
-	pushi 5
+	pushi 2
+	pushi 0
+	pushi 0
+	pushi 0
+	pushi 2
 	pushi 1
-	pushi 0
-	pushi 0
 	pushi 0
 start
 	pushgp
@@ -11,40 +13,29 @@ start
 	pushg 0
 	inf
 	store 0
-	pushgp
-	pushi 4
-	padd
-	pushg 1
-	pushg 0
-	sup
-	store 0
+labelWH0
 	pushg 1
 	pushg 0
 	inf
-	jz labelif0
-	pushgp
-	pushi 3
-	padd
-	pushi 5
-	store 0
+	jz labelWHfim0
 	pushgp
 	pushi 2
 	padd
-	pushi 32
-	store 0
-	jumb labelfim0
-labelif0:
-	pushgp
-	pushi 2
-	padd
-	pushi 3
-	store 0
-	pushgp
-	pushi 2
-	padd
-	pushi 4
-	store 0
-labelfim0:
 	pushg 2
+	pushi 1
+	add
+	store 0
+	pushgp
+	pushi 1
+	padd
+	pushg 1
+	pushi 1
+	add
+	store 0
+	jump labelWH0
+labelWHfim0:
+	pushg 2
+	writei
+	pushg 5
 	writei
 stop
