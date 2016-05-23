@@ -13,6 +13,10 @@ INICIO						{ return INICIO; }
 FIM						{ return FIM; }
 INSTINICIO					{ return INSTINICIO; }
 INSTFIM						{ return INSTFIM; }
+VOID					{ return VOID; }
+FUNCTION			{ return FUNCTION; }
+FIMFUNCTION		{ return FIMFUNCTION; }
+CALL 					{ return CALL; }
 VAR						{ return VAR; }
 SE						{ return SE; }
 ENTAO						{ return ENTAO; }

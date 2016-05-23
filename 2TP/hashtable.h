@@ -34,5 +34,5 @@ typedef struct entry
 typedef Entry* HashTable;
 
 HashTable createHashTable();
-void insertVariavel(HashTable h, Definition var);
-Definition getVariavel(HashTable h, char* name, int type);
+void insertDefinition(HashTable h, Definition var);
+Definition getDefinition(HashTable h, char* name, int type);

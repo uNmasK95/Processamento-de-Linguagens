@@ -32,7 +32,7 @@ void clearTable(HashTable h){
     initializeTable(h);
 }
 
-void insertVariavel(HashTable h, Definition def) {
+void insertDefinition(HashTable h, Definition def) {
 	int vhash=hash(def->name,def->type);
 	Entry aux,novo;
 	aux=h[vhash];
@@ -54,7 +54,7 @@ void insertVariavel(HashTable h, Definition def) {
 	}
 }
 
- Definition getVariavel(HashTable h, char* name, int type){
+ Definition getDefinition(HashTable h, char* name, int type){
 	int vhash=hash(name,type);
 	Entry aux=h[vhash];
 
