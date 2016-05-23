@@ -13,29 +13,63 @@ start
 	pushg 0
 	inf
 	store 0
-labelWH0
 	pushg 1
 	pushg 0
 	inf
-	jz labelWHfim0
-	pushgp
-	pushi 2
-	padd
-	pushg 2
-	pushi 1
-	add
-	store 0
-	pushgp
-	pushi 1
-	padd
+	jz labelif1
 	pushg 1
-	pushi 1
-	add
+	pushg 0
+	sup
+	jz labelif0
+	pushgp
+	pushi 3
+	padd
+	pushi 10
 	store 0
-	jump labelWH0
-labelWHfim0:
-	pushg 2
+	jump labelIFfim0
+labelif0:
+	pushgp
+	pushi 5
+	padd
+	pushi 15
+	store 0
+labelIFfim0:
+	pushgp
+	pushi 3
+	padd
+	pushi 5
+	store 0
+	jump labelIFfim1
+labelif1:
+	pushgp
+	pushi 5
+	padd
+	pushi 4
+	store 0
+labelIFfim1:
+	pushg 1
+	pushg 0
+	sup
+	jz labelif2
+	pushgp
+	pushi 5
+	padd
+	pushi 15
+	store 0
+	jump labelIFfim2
+labelif2:
+	pushgp
+	pushi 0
+	padd
+	pushi 10
+	store 0
+labelIFfim2:
+	pushg 3
 	writei
 	pushg 5
+	writei
+	pushg 6
+	writei
+	pushg 0
 	writei
 stop

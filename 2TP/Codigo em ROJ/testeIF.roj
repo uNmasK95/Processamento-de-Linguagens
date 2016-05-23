@@ -1,0 +1,44 @@
+INICIO
+VAR a=2;
+VAR b=0;
+VAR c=0;
+VAR d;
+VAR e=2;
+VAR f=1;
+VAR i=0;
+INSTINICIO
+
+
+d = b LL a;
+
+SE ( b LL a )
+ENTAO
+  SE ( b GG a )
+  ENTAO
+    d=10;
+  SENAO
+    f=15;
+  FIMSE
+  d=5;
+SENAO
+  f=4;
+FIMSE
+
+SE ( b GG a )
+ENTAO
+  f=15;
+SENAO
+  a=10;
+FIMSE
+
+
+
+IMPRIMIR d;
+IMPRIMIR f;
+IMPRIMIR i;
+IMPRIMIR a;
+
+
+INSTFIM
+
+FIM

@@ -84,8 +84,8 @@ Body 		:
 		| INSTINICIO { fprintf(out_file,"start\n"); } Instrucoes INSTFIM { fprintf(out_file, "%s", concatGlobal()); fprintf(out_file,"stop\n"); }
 		;
 
-Instrucoes	:
-		| Instrucoes Instrucao	{ push($2); }
+Instrucoes	:	{;}
+		| Instrucoes Instrucao	{ push($2); aminhamentoNumeroInst[aninhamento]++; }
 		;
 
 Instrucao 	: Atribuicao		{ $$ = $1; }
@@ -136,10 +136,10 @@ OpMul		: '*'		{ $$ = "\tmul\n"; }
 		| '%'				{ $$ = "\tmod\n"; }
 		;
 
-Condicional	: SE '(' Condicao ')' ENTAO { aminhamentoNumeroInst[aninhamento++]=nivel; } Instrucoes SENAO { aminhamentoNumeroInst[aninhamento++]=nivel; } Instrucoes FIMSE				{ $$=condicional($3); }
+Condicional	: SE '(' Condicao ')' ENTAO { aninhamento++; } Instrucoes SENAO { aninhamento++; } Instrucoes FIMSE				{ $$=condicional($3); }
 		;
 
-Ciclo	: ENQUANTO '(' Condicao ')' ENTAO { aminhamentoNumeroInst[aninhamento++]=nivel; } Instrucoes FIMENQUANTO							{ $$=ciclo($3); }
+Ciclo	: ENQUANTO '(' Condicao ')' ENTAO { aninhamento++; } Instrucoes FIMENQUANTO							{ $$=ciclo($3); }
 		;
 
 Input		: LER Endereco ';'		{ $$ = ler($2); }
@@ -212,44 +212,49 @@ char* condicional(char* cond){
 	then[0]='\0';
 	ifELSE[0]='\0';
 
-	aminhamentoNumeroInst[aninhamento++]=nivel;
 
-	aninhamento--;
-	nInst = aminhamentoNumeroInst[aninhamento]-aminhamentoNumeroInst[aninhamento-1];
+	nInst = aminhamentoNumeroInst[aninhamento];
 	for(i=0;i<nInst;i++){
 		char* aux = strdup(ifELSE);
 		sprintf(ifELSE,"%s%s",pop(),aux);
 	}
-
+	aminhamentoNumeroInst[aninhamento]=0;
 	aninhamento--;
-	nInst = aminhamentoNumeroInst[aninhamento]-aminhamentoNumeroInst[aninhamento-1];
+
+
+	nInst = aminhamentoNumeroInst[aninhamento];
 	for(i=0;i<nInst;i++){
 		char* aux = strdup(then);
 		sprintf(then,"%s%s",pop(),aux);
 	}
-	sprintf(instrucao,"%s\tjz labelif%d\n%s\tjump labelfim%d\nlabelif%d:\n%slabelIFfim%d:\n",cond,labelIF,then,labelIF,labelIF,ifELSE,labelIF);
+	aminhamentoNumeroInst[aninhamento]=0;
+	aninhamento--;
+
+	sprintf(instrucao,"%s\tjz labelif%d\n%s\tjump labelIFfim%d\nlabelif%d:\n%slabelIFfim%d:\n",cond,labelIF,then,labelIF,labelIF,ifELSE,labelIF);
 	labelIF++;
 	return strdup(instrucao);
 }
-
-
-
-
 char* ciclo(char* cond){
 	char instrucao[1000000];
 	char then[10000];
-	int i, nInst;
 
-	aminhamentoNumeroInst[aninhamento++]=nivel;
-	aninhamento--;
-	nInst = aminhamentoNumeroInst[aninhamento]-aminhamentoNumeroInst[aninhamento-1];
+	int i, nInst;
+	then[0]='\0';
+
+
+	for(i=0;i<=aninhamento;i++){ printf("aninhamento-pos:%d-%d\n",i,aminhamentoNumeroInst[i]); }
+
+	nInst = aminhamentoNumeroInst[aninhamento];
+	printf("NUmero de instruçoes %d\n",nInst );
 	for(i=0;i<nInst;i++){
 		char* aux = strdup(then);
 		sprintf(then,"%s%s",pop(),aux);
 	}
 
-	sprintf(instrucao,"labelWH%d\n%s\tjz labelWHfim%d\n%s\tjump labelWH%d\nlabelWHfim%d:\n",labelWHILE,cond,labelWHILE,then,labelWHILE,labelWHILE);
+	sprintf(instrucao,"labelWH%d:\n%s\tjz labelWHfim%d\n%s\tjump labelWH%d\nlabelWHfim%d:\n",labelWHILE,cond,labelWHILE,then,labelWHILE,labelWHILE);
 	labelWHILE++;
+	aminhamentoNumeroInst[aninhamento]=0;
+	aninhamento--;
 	return strdup(instrucao);
 }
 
@@ -360,6 +365,14 @@ void declaracao(int tamanho, char* identficador, int value, int dim){
   }
 }
 
+
+void init(){
+	int i,max=30;
+	for(i=0;i<30;i++){
+		stackStrings[i]=NULL;
+		aminhamentoNumeroInst[i]=0;
+	}
+}
 
 int yyerror(char * mensagem) {
 	printf("Erro Sintático %s\n", mensagem);

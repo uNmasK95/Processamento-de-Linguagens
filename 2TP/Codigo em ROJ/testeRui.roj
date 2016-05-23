@@ -1,33 +1,8 @@
 INICIO
-VAR a=5;
-VAR b=1;
-VAR c;
-VAR d;
-VAR e;
-VAR f;
+VAR a=-5;
 INSTINICIO
 
-
-d = b LL a;
-
-SE ( b LL a )
-ENTAO
-  SE (a EQ 5)
-  ENTAO
-    SE (a EQ 4)
-    ENTAO
-      c=54;
-    SENAO
-      c=23;
-    FIMSE
-  SENAO
-    c=13;
-  FIMSE
-SENAO
-  c=4;
-  c=3;
-FIMSE
-IMPRIMIR c;
+IMPRIMIR a;
 
 INSTFIM
 
