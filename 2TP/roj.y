@@ -347,7 +347,6 @@ char* pushArray2D(char* var, char* expCod1, char* expCod2){
 			sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n%s\tpushi %d\n\tmul\n %s\tadd\n\tloadn\n",def->var->addr,expCod1,(def->var->size/def->var->dim),expCod2);
 		}
 	}
-
 	return strdup(operacao);
 }
 
