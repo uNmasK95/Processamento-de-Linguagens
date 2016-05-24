@@ -1,21 +1,29 @@
 INICIO
 VAR a=-5;
 
-
 VOID FUNCTION teste ( )
   VAR b=4;
   VAR a;
   SE ( b GG a )
   ENTAO
-    IMPRIMIR 5;
+    IMPRIMIR a;
   SENAO
-    IMPRIMIR 4;
+    IMPRIMIR b;
   FIMSE
 FIMFUNCTION
 
+
+VOID FUNCTION aula ( )
+  VAR b=7;
+  IMPRIMIR b;
+FIMFUNCTION
+
+
 INSTINICIO
 
-CALL teste ( );
+teste();
+
+aula();
 
 INSTFIM
 

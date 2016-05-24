@@ -1,0 +1,30 @@
+	pushi -5
+	jump main
+labelFunction_teste: nop
+	pushi 4
+	pushi 0
+	pushl 0
+	pushl 1
+	sup
+	jz labelif0
+	pushl 1
+	writei
+	jump labelIFfim0
+labelif0:
+	pushl 0
+	writei
+labelIFfim0:
+	return
+labelFunction_aula: nop
+	pushi 7
+	pushl 0
+	writei
+	return
+main:
+	nop
+	pusha labelFunction_teste
+	call
+	nop
+	pusha labelFunction_aula
+	call
+stop

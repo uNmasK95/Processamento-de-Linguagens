@@ -6,7 +6,6 @@
 #include <string.h>
 FILE *out_file;
 int currPointer=0;
-int currPointerFuntion=0;
 
 HashTable tabela;
 HashTable tabelaFuntion;
@@ -25,9 +24,6 @@ char* atribuicao(char* var, char* val);
 
 
 void declaracaoFunction(char* nameFuntion, int retorno);
-void functionProcedure(char* name);
-void addArg(char* arg);
-void initArgsFuntions();
 void functionCall(char* nameFuntion);
 
 void endCiclo();
@@ -42,8 +38,7 @@ void endIF();
 int loadADDR=0;
 
 //Functions
-char* argsFuntions[10];
-int argcFunctions=0;
+
 int makeFunction=0; //diz-nos se estamos a escrever uma função
 
 int stackLabels[10000];
@@ -100,7 +95,10 @@ Declaracao	: VAR id ';' 									{ declaracao(1,$2,0,0); }
 		;
 
 Functions	:
-		| Return FUNCTION id '('   ')' { declaracaoFunction($3,$1); makeFunction=1; } Declaracoes Instrucoes  FIMFUNCTION { fprintf(out_file,"\treturn\n"); makeFunction=0; tabelaFuntion = createHashTable(); }
+		| Functions Function
+		;
+
+Function : Return FUNCTION id '('   ')' { currPointer=0; declaracaoFunction($3,$1); makeFunction=1; } Declaracoes Instrucoes  FIMFUNCTION { fprintf(out_file,"\treturn\n"); makeFunction=0; tabelaFuntion = createHashTable(); }
 		| Return FUNCTION id '(' VAR id ',' VAR id ')' FIMFUNCTION 	{ fprintf(out_file, "Func Prof"); }
 		;
 
@@ -108,8 +106,7 @@ Return	:				{ $$=1; }		//caso não tenha nada o retorno é um inteiro
 			| VOID 		{ $$=0; }   //não existe return
 			;
 
-Body 		:
-		| INSTINICIO { fprintf(out_file,"main:\n"); } Instrucoes INSTFIM { fprintf(out_file,"stop\n"); }
+Body	: INSTINICIO { fprintf(out_file,"main:\n"); } Instrucoes INSTFIM { fprintf(out_file,"stop\n"); }
 		;
 
 Instrucoes	:
@@ -121,7 +118,7 @@ Instrucao 	: Atribuicao
 		| Input
 		| Output
 		| Ciclo
-		| id '(' Args ')' ';'	{ functionCall($1); }
+		| id '(' Args ')' ';'		{ functionCall($1); }
 		;
 
 Args :
@@ -243,7 +240,7 @@ void functionCall(char* nameFuntion){
 	if((def = getDefinition(tabela,nameFuntion,0))==NULL){
         fatal_error("Function not exist. Need to be declared");
     }else{
-			fprintf(out_file,"\tcall %s\n",def->func->label);
+			fprintf(out_file,"\tnop\n\tpusha %s\n\tcall\n",def->func->label);
 	  }
 }
 
@@ -287,19 +284,29 @@ char* pushVariavel(char* var){
 
 	if(makeFunction==1){ //estamos a defenir variaveis de uma função
 		def = getDefinition(tabelaFuntion,var,1);
+		if(def==NULL){
+			fatal_error("Variavel não defenida"); //ver isto que dá erro
+		}else{
+			if( loadADDR==1 ) { //para colocar na stack o endereço
+				sprintf(operacao,"\tpushfp\n\tpushi %d\n\tpadd\n",def->var->addr);
+			}else{
+				sprintf(operacao,"\tpushl %d\n",def->var->addr);
+			}
+		}
 	}else{ //varaivel global
 		def = getDefinition(tabela,var,1);
-	}
-
-	if(def==NULL){
-		fatal_error("Variavel não defenida"); //ver isto que dá erro
-	}else{
-		if( loadADDR==1 ) { //para colocar na stack o endereço
-			sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n",def->var->addr);
+		if(def==NULL){
+			fatal_error("Variavel não defenida"); //ver isto que dá erro
 		}else{
-			sprintf(operacao,"\tpushg %d\n",def->var->addr);
+			if( loadADDR==1 ) { //para colocar na stack o endereço
+				sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n",def->var->addr);
+			}else{
+				sprintf(operacao,"\tpushg %d\n",def->var->addr);
+			}
 		}
 	}
+
+
 
 	return strdup(operacao);
 }
@@ -311,17 +318,25 @@ char* pushArray1D(char* var, char* expCod){
 
 	if(makeFunction==1){ //estamos a defenir variaveis de uma função
 		def = getDefinition(tabelaFuntion,var,1);
+		if(def==NULL){
+			fatal_error("Variavel não defenida");
+		}else{
+			if(loadADDR==1){
+				sprintf(operacao,"\tpushfp\n\tpushi %d\n\tpadd\n%s\tpadd\n",def->var->addr,expCod);
+			}else{
+				sprintf(operacao,"\tpushfp\n\tpushi %d\n\tpadd\n%s\tloadn\n",def->var->addr,expCod);
+			}
+		}
 	}else{ //varaivel global
 		def = getDefinition(tabela,var,1);
-	}
-
-	if(def==NULL){
-		fatal_error("Variavel não defenida");
-	}else{
-		if(loadADDR==1){
-			sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n%s\tpadd\n",def->var->addr,expCod);
+		if(def==NULL){
+			fatal_error("Variavel não defenida");
 		}else{
-			sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n%s\tloadn\n",def->var->addr,expCod);
+			if(loadADDR==1){
+				sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n%s\tpadd\n",def->var->addr,expCod);
+			}else{
+				sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n%s\tloadn\n",def->var->addr,expCod);
+			}
 		}
 	}
 	return strdup(operacao);
@@ -334,17 +349,25 @@ char* pushArray2D(char* var, char* expCod1, char* expCod2){
 
 	if(makeFunction==1){ //estamos a defenir variaveis de uma função
 		def = getDefinition(tabelaFuntion,var,1);
+		if( def==NULL ){
+			fatal_error("Variavel não defenida");
+		}else{
+			if(loadADDR==1){
+				sprintf(operacao,"\tpushfp\n\tpushi %d\n\tpadd\n%s\tpushi %d\n\tmul\n%s\tadd\n\tpadd\n",def->var->addr,expCod1,(def->var->size/def->var->dim),expCod2);
+			}else{
+				sprintf(operacao,"\tpushfp\n\tpushi %d\n\tpadd\n%s\tpushi %d\n\tmul\n %s\tadd\n\tloadn\n",def->var->addr,expCod1,(def->var->size/def->var->dim),expCod2);
+			}
+		}
 	}else{ //varaivel global
 		def = getDefinition(tabela,var,1);
-	}
-
-	if( def==NULL ){
-		fatal_error("Variavel não defenida");
-	}else{
-		if(loadADDR==1){
-			sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n%s\tpushi %d\n\tmul\n%s\tadd\n\tpadd\n",def->var->addr,expCod1,(def->var->size/def->var->dim),expCod2);
+		if( def==NULL ){
+			fatal_error("Variavel não defenida");
 		}else{
-			sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n%s\tpushi %d\n\tmul\n %s\tadd\n\tloadn\n",def->var->addr,expCod1,(def->var->size/def->var->dim),expCod2);
+			if(loadADDR==1){
+				sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n%s\tpushi %d\n\tmul\n%s\tadd\n\tpadd\n",def->var->addr,expCod1,(def->var->size/def->var->dim),expCod2);
+			}else{
+				sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n%s\tpushi %d\n\tmul\n %s\tadd\n\tloadn\n",def->var->addr,expCod1,(def->var->size/def->var->dim),expCod2);
+			}
 		}
 	}
 	return strdup(operacao);
@@ -365,7 +388,7 @@ void declaracaoFunction(char* nameFuntion, int retorno/*0 se for void 1 se nao t
 			def1->func->enableReturn=retorno;
 			def1->func->argc=0;
 			insertDefinition(tabela,def1);
-			fprintf(out_file,"%s", label);
+			fprintf(out_file,"%s: nop\n", label);
 	  }
 }
 
@@ -380,10 +403,10 @@ void declaracao(int tamanho, char* identficador, int value, int dim){
 	}
 
 	if(def!=NULL){
-        fatal_error("Multiple variable definitions");
-  }
-  else{
-    Definition def1 = (Definition)malloc(sizeof(struct definition));
+				fatal_error("Multiple variable definitions");
+	}
+	else{
+		Definition def1 = (Definition)malloc(sizeof(struct definition));
 		def1->name=name;
 		def1->type=1;
 		def1->var = (Variavel)malloc(sizeof(struct variavel));
@@ -395,14 +418,14 @@ void declaracao(int tamanho, char* identficador, int value, int dim){
 		}else{
 			insertDefinition(tabela,def1);
 		}
-    if(tamanho>1){
-        fprintf(out_file,"\tpushn %d\n", tamanho);
-        currPointer+= tamanho;
-    }else{
-    		fprintf(out_file,"\tpushi %d\n",value);
-        currPointer++;
-    }
-  }
+		if(tamanho>1){
+				fprintf(out_file,"\tpushn %d\n", tamanho);
+				currPointer+= tamanho;
+		}else{
+				fprintf(out_file,"\tpushi %d\n",value);
+				currPointer++;
+		}
+	}
 }
 
 int yyerror(char * mensagem) {
