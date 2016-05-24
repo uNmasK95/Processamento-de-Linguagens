@@ -12,19 +12,18 @@ INSTINICIO
 d = b LL a;
 ENQUANTO ( b LL a )
 ENTAO
-  c=c+5;
   b=b+1;
   ENQUANTO ( i LL e )
   ENTAO
-    f=f+5;
     i=i+1;
   FIMENQUANTO
   d=d+4;
 FIMENQUANTO
 
 
-IMPRIMIR c;
-IMPRIMIR f;
+IMPRIMIR b;
+IMPRIMIR d;
+IMPRIMIR i;
 
 INSTFIM
 

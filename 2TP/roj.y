@@ -18,14 +18,10 @@ char* pushNumero(int numero);
 char* pushVariavel(char* var);
 char* pushArray1D(char* var, char* expCod);
 char* pushArray2D(char* var, char* expCod1, char* expCod2);
-char* ler(char* op);
-char* imprimir(char* op);
+void ler(char* op);
+void imprimir(char* op);
 char* operacao(char* exp1, char* op, char* exp2);
 char* atribuicao(char* var, char* val);
-char* condicional(char* cond);
-char* ciclo(char* cond);
-char* concat(char* exp1, char* exp2);
-char* concatGlobal();
 void push(char* inst);
 char* pop();
 
@@ -34,6 +30,16 @@ void functionProcedure(char* name);
 void addArg(char* arg);
 void initArgsFuntions();
 char* makeCallFunction(char* nameFuntion);
+
+void endCiclo();
+void initCiclo();
+void thenCiclo();
+
+void initIF();
+void thenIF();
+void elseIF();
+void endIF();
+
 
 int loadADDR=0;
 int labelIF=0;
@@ -49,6 +55,11 @@ int aninhamento=0;
 char* argsFuntions[10];
 int argcFunctions=0;
 int makeFunction=0; //diz-nos se estamos a escrever uma função
+
+int stackLabels[10000];
+int stackNivel=0;
+int createLabelNum=0;
+
 
 %}
 
@@ -77,8 +88,7 @@ int makeFunction=0; //diz-nos se estamos a escrever uma função
 %type <var>Termo
 %type <var>Output
 %type <var>Input
-%type <var>Endereco Instrucao Atribuicao OpLog Condicao Condicional Ciclo
-%type <var>Instrucoes
+%type <var>Endereco Atribuicao OpLog Condicao Condicional Ciclo
 
 //funçoes
 %type <val>Return
@@ -86,7 +96,7 @@ int makeFunction=0; //diz-nos se estamos a escrever uma função
 %%
 
 
-Programa	: INICIO Declaracoes Functions Body FIM
+Programa	: INICIO Declaracoes { fprintf(out_file,"\tjump main\n"); } Functions Body FIM
 		;
 
 Declaracoes	:
@@ -110,27 +120,27 @@ Return	:				{ $$=1; }		//caso não tenha nada o retorno é um inteiro
 			;
 
 Body 		:
-		| INSTINICIO { fprintf(out_file,"start\n"); } Instrucoes INSTFIM { fprintf(out_file, "%s", concatGlobal()); fprintf(out_file,"stop\n"); }
+		| INSTINICIO { fprintf(out_file,"main:\n"); } Instrucoes INSTFIM { fprintf(out_file,"stop\n"); }
 		;
 
-Instrucoes	:	{;}
-		| Instrucoes Instrucao	{ push($2); aminhamentoNumeroInst[aninhamento]++; }
+Instrucoes	:
+		| Instrucoes Instrucao
 		;
 
-Instrucao 	: Atribuicao		{ $$ = $1; }
-		| Condicional						{ $$ = $1; }
-		| Input									{ $$ = $1; }
-		| Output								{ $$ = $1; }
-		| Ciclo									{ $$ = $1; }
-		| CALL id '('  ')' ';'	{ $$ = makeCallFunction($2); }
+Instrucao 	: Atribuicao
+		| Condicional
+		| Input
+		| Output
+		| Ciclo
+		| CALL id '('  ')' ';'
 		;
 
-Atribuicao 	: Endereco '=' Condicao ';'		{ $$ = atribuicao($1,$3); }
+Atribuicao 	: Endereco { fprintf(out_file,"%s",$1); }'=' Condicao ';'		{ fprintf(out_file,"\tstore 0\n"); }
 		;
 
-Condicao	: Expressao							{ $$ = $1; }
-		| Expressao OpLog Expressao		{ $$ = operacao($1,$2,$3); }
-		| NOT Expressao								{ $$ = operacao($2,"\tnot\n",""); }
+Condicao	: Expressao							{ fprintf(out_file,"%s",$1); }
+		| Expressao OpLog Expressao		{ fprintf(out_file,"%s%s%s",$1,$3,$2); }
+		| NOT Expressao								{ fprintf(out_file, "%s\tnot\n",$2); }
 		;
 
 
@@ -167,16 +177,17 @@ OpMul		: '*'		{ $$ = "\tmul\n"; }
 		| '%'				{ $$ = "\tmod\n"; }
 		;
 
-Condicional	: SE '(' Condicao ')' ENTAO { aninhamento++; } Instrucoes SENAO { aninhamento++; } Instrucoes FIMSE				{ $$=condicional($3); }
+//abrir label push();
+Condicional	: SE { initIF(); } '(' Condicao ')' ENTAO { thenIF(); } Instrucoes SENAO { elseIF(); } Instrucoes FIMSE	{ endIF(); }
 		;
 
-Ciclo	: ENQUANTO '(' Condicao ')' ENTAO { aninhamento++; } Instrucoes FIMENQUANTO							{ $$=ciclo($3); }
+Ciclo	: ENQUANTO { initCiclo(); } '(' Condicao ')' { thenCiclo(); } ENTAO Instrucoes FIMENQUANTO	{ endCiclo(); }
 		;
 
-Input		: LER Endereco ';'		{ $$ = ler($2); }
+Input		: LER Endereco ';'		{ ler($2); }
 		;
 
-Output 		: IMPRIMIR Valor ';'	{ $$ = imprimir($2); }
+Output 		: IMPRIMIR Valor ';'	{ imprimir($2); }
 		;
 
 numero 		: num 		{ $$=$1; }
@@ -200,6 +211,41 @@ Variavel	: id																	{ $$ = pushVariavel($1); }
 
 %%
 #include "lex.yy.c"
+
+void initIF(){
+	stackLabels[stackNivel++]=createLabelNum; //fazer push para a stack de labels
+	createLabelNum++;
+}
+
+void thenIF(){
+	fprintf(out_file,"\tjz labelif%d\n",stackLabels[stackNivel-1]);
+}
+
+void elseIF(){
+	fprintf(out_file,"\tjump labelIFfim%d\nlabelif%d:\n",stackLabels[stackNivel-1],stackLabels[stackNivel-1]);
+}
+
+void endIF(){
+	fprintf(out_file,"labelIFfim%d:\n",stackLabels[stackNivel-1]);
+	stackNivel--;
+}
+
+void initCiclo(){
+	stackLabels[stackNivel++]=createLabelNum; //fazer push para a stack de labels
+	fprintf(out_file,"labelWH%d:\n",stackLabels[stackNivel-1]);
+	createLabelNum++;
+}
+
+void thenCiclo(){
+	fprintf(out_file,"\tjz labelWHfim%d\n",stackLabels[stackNivel-1]);
+}
+
+
+void endCiclo(){
+	fprintf(out_file,"\tjump labelWH%d\nlabelWHfim%d:\n",stackLabels[stackNivel-1],stackLabels[stackNivel-1]);
+	stackNivel--;
+}
+
 
 void push(char* inst){
 	stackStrings[nivel++]=strdup(inst);
@@ -253,73 +299,6 @@ void fatal_error(char *s){
     exit(0);
 }
 
-char* concatGlobal(){
-	char instrucao[1000000];
-	int i;
-	instrucao[0]='\0';
-	for(i=0;i<nivel;i++){
-		sprintf(instrucao,"%s%s",instrucao,stackStrings[i]);
-	}
-	return strdup(instrucao);
-}
-
-char* concat(char* exp1, char* exp2){
-	char instrucao[1000000];
-	sprintf(instrucao,"%s%s",exp1,exp2);
-	return strdup(instrucao);
-}
-
-char* condicional(char* cond){
-	char instrucao[1000000];
-	char then[10000];
-	char ifELSE[10000];
-	int i, nInst;
-
-	then[0]='\0';
-	ifELSE[0]='\0';
-
-
-	nInst = aminhamentoNumeroInst[aninhamento];
-	for(i=0;i<nInst;i++){
-		char* aux = strdup(ifELSE);
-		sprintf(ifELSE,"%s%s",pop(),aux);
-	}
-	aminhamentoNumeroInst[aninhamento]=0;
-	aninhamento--;
-
-
-	nInst = aminhamentoNumeroInst[aninhamento];
-	for(i=0;i<nInst;i++){
-		char* aux = strdup(then);
-		sprintf(then,"%s%s",pop(),aux);
-	}
-	aminhamentoNumeroInst[aninhamento]=0;
-	aninhamento--;
-
-	sprintf(instrucao,"%s\tjz labelif%d\n%s\tjump labelIFfim%d\nlabelif%d:\n%slabelIFfim%d:\n",cond,labelIF,then,labelIF,labelIF,ifELSE,labelIF);
-	labelIF++;
-	return strdup(instrucao);
-}
-
-char* ciclo(char* cond){
-	char instrucao[1000000];
-	char then[10000];
-	int i, nInst;
-
-	then[0]='\0';
-	nInst = aminhamentoNumeroInst[aninhamento];
-	for(i=0;i<nInst;i++){
-		char* aux = strdup(then);
-		sprintf(then,"%s%s",pop(),aux);
-	}
-
-	sprintf(instrucao,"labelWH%d:\n%s\tjz labelWHfim%d\n%s\tjump labelWH%d\nlabelWHfim%d:\n",labelWHILE,cond,labelWHILE,then,labelWHILE,labelWHILE);
-	labelWHILE++;
-	aminhamentoNumeroInst[aninhamento]=0;
-	aninhamento--;
-	return strdup(instrucao);
-}
-
 
 void initArgsFuntions(){
 	int i;
@@ -341,17 +320,13 @@ char* operacao(char* exp1, char* op, char* exp2){
 	return strdup(instrucao);
 }
 
-char* imprimir(char* op){
-	char instrucao[10000];
-	sprintf(instrucao,"%s\twritei\n",op);
-	return strdup(instrucao);
+void imprimir(char* op){
+	fprintf(out_file, "%s\twritei\n",op);
 }
 
 //" READ ATOI STOR"
-char* ler(char* op){
-	char instrucao[1000];
-	sprintf(instrucao,"%s\tread\n\tatoi\n\tstore 0\n",op);
-	return strdup(instrucao);
+void ler(char* op){
+	fprintf(out_file,"%s\tread\n\tatoi\n\tstore 0\n",op );
 }
 
 char* pushNumero(int numero){

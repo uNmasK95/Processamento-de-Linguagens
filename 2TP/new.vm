@@ -1,0 +1,72 @@
+	pushi 2
+	pushi 0
+	pushi 0
+	pushi 0
+	pushi 2
+	pushi 1
+	pushi 0
+	jump main
+main:
+	pushgp
+	pushi 3
+	padd
+	pushg 1
+	pushg 0
+	inf
+	store 0
+	pushg 1
+	pushg 0
+	inf
+	jz labelif0
+	pushg 1
+	pushg 0
+	sup
+	jz labelif1
+	pushgp
+	pushi 3
+	padd
+	pushi 10
+	store 0
+	jump labelIFfim1
+labelif1:
+	pushgp
+	pushi 5
+	padd
+	pushi 15
+	store 0
+labelIFfim1:
+	pushgp
+	pushi 3
+	padd
+	pushi 5
+	store 0
+	jump labelIFfim0
+labelif0:
+	pushgp
+	pushi 5
+	padd
+	pushi 4
+	store 0
+labelIFfim0:
+	pushg 1
+	pushg 0
+	sup
+	jz labelif2
+	pushgp
+	pushi 5
+	padd
+	pushi 15
+	store 0
+	jump labelIFfim2
+labelif2:
+	pushgp
+	pushi 0
+	padd
+	pushi 10
+	store 0
+labelIFfim2:
+	pushg 5
+	writei
+	pushg 0
+	writei
+stop

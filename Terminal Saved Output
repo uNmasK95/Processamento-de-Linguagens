@@ -1,0 +1,566 @@
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:133.19-38: warning: type clash on default action: <var> != <>
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1463:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:819:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+roj.y:190:19: error: assigning to 'char *' from incompatible type 'void'
+    { (yyval.var) = ler((yyvsp[(2) - (3)].var)); }
+                  ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+roj.y:193:19: error: assigning to 'char *' from incompatible type 'void'
+    { (yyval.var) = imprimir((yyvsp[(2) - (3)].var)); }
+                  ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+y.tab.c:1846:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+2 warnings and 2 errors generated.
+make: *** [roj] Error 1
+rjaf:2TP rjaf$ c
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:133.19-38: warning: type clash on default action: <var> != <>
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1463:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:819:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+y.tab.c:1846:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+2 warnings generated.
+rm lex.yy.c
+rm y.tab.h
+rm y.tab.c
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeWHILE.roj 
+Segmentation fault: 11
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:133.19-38: warning: type clash on default action: <var> != <>
+flex roj.l
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1463:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:819:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+y.tab.c:1846:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+2 warnings generated.
+rm lex.yy.c
+rm y.tab.h
+rm y.tab.c
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeWHILE.roj 
+OLA
+OLA
+Segmentation fault: 11
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:133.19-38: warning: type clash on default action: <var> != <>
+flex roj.l
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1463:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:819:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+y.tab.c:1846:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+2 warnings generated.
+rm lex.yy.c
+rm y.tab.h
+rm y.tab.c
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeWHILE.roj 
+OLA
+OLA
+FIM
+Segmentation fault: 11
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeWHILE.roj 
+OLA
+OLA
+FIM
+Segmentation fault: 11
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:133.19-38: warning: type clash on default action: <var> != <>
+flex roj.l
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1463:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:819:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+y.tab.c:1846:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+2 warnings generated.
+rm lex.yy.c
+rm y.tab.h
+rm y.tab.c
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeWHILE.roj 
+OLA
+OLA
+FIM
+STACK2
+Segmentation fault: 11
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:133.19-38: warning: type clash on default action: <var> != <>
+flex roj.l
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1463:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:819:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+y.tab.c:1846:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+2 warnings generated.
+rm lex.yy.c
+rm y.tab.h
+rm y.tab.c
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeWHILE.roj 
+OLA
+OLA
+FIM
+STACK2
+FIM2
+Segmentation fault: 11
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:133.19-38: warning: type clash on default action: <var> != <>
+flex roj.l
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1463:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:819:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+roj.y:125:37: warning: incompatible pointer types passing 'FILE *' (aka 'struct __sFILE *') to parameter of type
+      'const char *' [-Wincompatible-pointer-types]
+    { printf("INSTRUÇAo\n");printf(out_file,"%s",(yyvsp[(2) - (2)].var)); }
+                                   ^~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/usr/include/stdio.h:259:36: note: 
+      passing argument to parameter here
+int      printf(const char * __restrict, ...) __printflike(1, 2);
+                                       ^
+y.tab.c:1846:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+3 warnings generated.
+rm lex.yy.c
+rm y.tab.h
+rm y.tab.c
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:133.19-38: warning: type clash on default action: <var> != <>
+flex roj.l
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1463:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:819:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+y.tab.c:1846:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+2 warnings generated.
+rm lex.yy.c
+rm y.tab.h
+rm y.tab.c
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeWHILE.roj 
+INSTRUÇAo
+OLA
+INSTRUÇAo
+OLA
+INSTRUÇAo
+FIM
+STACK2
+FIM2
+INSTRUÇAo
+Segmentation fault: 11
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:133.19-38: warning: type clash on default action: <var> != <>
+flex roj.l
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1463:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:819:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+y.tab.c:1846:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+2 warnings generated.
+rm lex.yy.c
+rm y.tab.h
+rm y.tab.c
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeWHILE.roj 
+INSTRUÇAo
+OLA
+INSTRUÇAo
+OLA
+INSTRUÇAo
+FIM
+STACK2
+FIM2
+INSTRUÇAo
+INSTRUÇAo
+FIM
+STACK1
+FIM2
+INSTRUÇAo
+INSTRUÇAo
+INSTRUÇAo
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:133.19-38: warning: type clash on default action: <var> != <>
+flex roj.l
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1465:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:821:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+y.tab.c:1853:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+2 warnings generated.
+rm lex.yy.c
+rm y.tab.h
+rm y.tab.c
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeWHILE.roj 
+INSTRUÇAo
+OLA
+INSTRUÇAo
+OLA
+INSTRUÇAo
+FIM
+STACK2
+FIM2
+INSTRUÇAo
+INSTRUÇAo
+FIM
+STACK1
+FIM2
+INSTRUÇAo
+INSTRUÇAo
+INSTRUÇAo
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:133.19-38: warning: type clash on default action: <var> != <>
+flex roj.l
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1465:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:821:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+y.tab.c:1853:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+2 warnings generated.
+rm lex.yy.c
+rm y.tab.h
+rm y.tab.c
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeWHILE.roj 
+INSTRUÇAo
+OLA
+INSTRUÇAo
+FIM
+STACK1
+FIM2
+INSTRUÇAo
+INSTRUÇAo
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:133.19-38: warning: type clash on default action: <var> != <>
+flex roj.l
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1465:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:821:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+roj.y:184:17: error: too few arguments to function call, single argument 'condicao' was not specified
+    { initCiclo(); }
+      ~~~~~~~~~ ^
+roj.y:39:1: note: 'initCiclo' declared here
+void initCiclo(char* condicao);
+^
+roj.y:184:7: warning: implicit declaration of function 'thenCiclo' is invalid in C99 [-Wimplicit-function-declaration]
+    { thenCiclo(); }
+      ^
+y.tab.c:1858:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+roj.y:224:6: error: conflicting types for 'thenCiclo'
+void thenCiclo(){
+     ^
+roj.y:184:7: note: previous implicit declaration is here
+    { thenCiclo(); }
+      ^
+3 warnings and 2 errors generated.
+make: *** [roj] Error 1
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeWHILE.roj 
+INSTRUÇAo
+OLA
+INSTRUÇAo
+FIM
+STACK1
+FIM2
+INSTRUÇAo
+INSTRUÇAo
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:134.19-38: warning: type clash on default action: <var> != <>
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1466:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:822:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+y.tab.c:1859:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+2 warnings generated.
+rm lex.yy.c
+rm y.tab.h
+rm y.tab.c
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeWHILE.roj 
+INSTRUÇAo
+OLA
+INSTRUÇAo
+FIM
+STACK1
+FIM2
+INSTRUÇAo
+INSTRUÇAo
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:134.19-38: warning: type clash on default action: <var> != <>
+flex roj.l
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1470:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:826:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+y.tab.c:1868:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+2 warnings generated.
+rm lex.yy.c
+rm y.tab.h
+rm y.tab.c
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeWHILE.roj 
+INSTRUÇAo
+OLA
+INSTRUÇAo
+FIM
+STACK1
+FIM2
+INSTRUÇAo
+INSTRUÇAo
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:140.19-38: warning: type clash on default action: <var> != <>
+roj.y:185.17-23: syntax error, unexpected identifier
+roj.y:185.24: invalid character: `('
+roj.y:185.34: warning: stray `,' treated as white space
+roj.y:185.107: warning: stray `,' treated as white space
+roj.y:185.112: warning: stray `,' treated as white space
+roj.y:185.120: warning: stray `,' treated as white space
+roj.y:185.125: warning: stray `,' treated as white space
+roj.y:185.133: warning: stray `,' treated as white space
+roj.y:185.141: warning: stray `,' treated as white space
+roj.y:185.148: warning: stray `,' treated as white space
+roj.y:185.156: invalid character: `)'
+make: *** [y.tab.c] Error 1
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:140.19-38: warning: type clash on default action: <var> != <>
+flex roj.l
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1476:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:832:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+y.tab.c:1879:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+2 warnings generated.
+rm lex.yy.c
+rm y.tab.h
+rm y.tab.c
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeWHILE.roj 
+INSTRUÇAo
+INSTRUÇAo
+INSTRUÇAo
+INSTRUÇAo
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:131.11: warning: empty rule for typed nonterminal, and no action
+roj.y:140.19-38: warning: type clash on default action: <var> != <>
+flex roj.l
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1476:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:832:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+y.tab.c:1869:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+2 warnings generated.
+rm lex.yy.c
+rm y.tab.h
+rm y.tab.c
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeWHILE.roj 
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:131.11: warning: empty rule for typed nonterminal, and no action
+roj.y:140.19-38: warning: type clash on default action: <var> != <>
+flex roj.l
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1476:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:832:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+y.tab.c:1869:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+^[[A2 warnings generated.
+^[[Arm lex.yy.c
+rm y.tab.h
+rm y.tab.c
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeWHILE.roj 
+Erro Sintático syntax error
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:131.11: warning: empty rule for typed nonterminal, and no action
+roj.y:140.19-38: warning: type clash on default action: <var> != <>
+flex roj.l
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1476:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:832:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+y.tab.c:1869:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+2 warnings generated.
+rm lex.yy.c
+rm y.tab.h
+rm y.tab.c
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeWHILE.roj 
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeWHILE.roj 
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:131.11: warning: empty rule for typed nonterminal, and no action
+roj.y:140.19-38: warning: type clash on default action: <var> != <>
+flex roj.l
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1476:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:832:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+y.tab.c:1869:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+2 warnings generated.
+rm lex.yy.c
+rm y.tab.h
+rm y.tab.c
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeIF.roj 
+rjaf:2TP rjaf$ make
+yacc -d roj.y
+roj.y:131.11: warning: empty rule for typed nonterminal, and no action
+roj.y:140.19-38: warning: type clash on default action: <var> != <>
+flex roj.l
+gcc  hashtable.o -o roj y.tab.c
+y.tab.c:1476:16: warning: implicit declaration of function 'yylex' is invalid in C99 [-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+y.tab.c:832:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+y.tab.c:1869:7: warning: implicit declaration of function 'yyerror' is invalid in C99 [-Wimplicit-function-declaration]
+      yyerror (YY_("syntax error"));
+      ^
+2 warnings generated.
+rm lex.yy.c
+rm y.tab.h
+rm y.tab.c
+rjaf:2TP rjaf$ ./roj new.vm < Codigo\ em\ ROJ/testeIF.roj 
+rjaf:2TP rjaf$ 
