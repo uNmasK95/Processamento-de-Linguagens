@@ -3,14 +3,10 @@ INICIO
 	VAR b;
 	VAR c;
 	VAR g;
-	VAR b;
 INSTINICIO
-	g=-999;
+	g=0;
 	LER a;
-	SE (a GG g) ENTAO
-		g=a;
-	SENAO
-	FIMSE
+	g=a;
 	LER b;
 	SE (b GG g) ENTAO
 		g=b;
