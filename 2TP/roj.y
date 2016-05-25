@@ -24,7 +24,7 @@ char* atribuicao(char* var, char* val);
 
 
 void declaracaoFunction(char* nameFuntion, int retorno);
-void functionCall(char* nameFuntion);
+void functionCall(char* nameFuntion, int needReturn);
 
 void endCiclo();
 void initCiclo();
@@ -57,7 +57,7 @@ int createLabelNum=0;
 %token ENQUANTO FIMENQUANTO
 %token IMPRIMIR LER
 %token DIFF GG LL GE LE EQ AND OR NOT
-%token VOID FUNCTION FIMFUNCTION CALL
+%token VOID FUNCTION FIMFUNCTION RETURN
 
 %token <var>id
 %token <val>num
@@ -76,8 +76,6 @@ int createLabelNum=0;
 %type <var>Endereco Atribuicao OpLog Condicao Condicional Ciclo
 
 //funçoes
-%type <val>Return
-
 %%
 
 
@@ -98,13 +96,11 @@ Functions	:
 		| Functions Function
 		;
 
-Function : Return FUNCTION id '('   ')' { currPointer=0; declaracaoFunction($3,$1); makeFunction=1; } Declaracoes Instrucoes  FIMFUNCTION { fprintf(out_file,"\treturn\n"); makeFunction=0; tabelaFuntion = createHashTable(); }
-		| Return FUNCTION id '(' VAR id ',' VAR id ')' FIMFUNCTION 	{ fprintf(out_file, "Func Prof"); }
+Function : FUNCTION id '('   ')' { currPointer=0; declaracaoFunction($2,1); makeFunction=1; } Declaracoes Instrucoes RETURN Expressao FIMFUNCTION { fprintf(out_file,"\treturn\n"); makeFunction=0; tabelaFuntion = createHashTable(); }
+		| VOID FUNCTION id '('   ')' { currPointer=0; declaracaoFunction($3,0); makeFunction=1; } Declaracoes Instrucoes FIMFUNCTION { fprintf(out_file,"\treturn\n"); makeFunction=0; tabelaFuntion = createHashTable(); }
+		| FUNCTION id '(' VAR id ',' VAR id ')' FIMFUNCTION 	{ fprintf(out_file, "Func Prof"); }
+		| VOID FUNCTION id '(' VAR id ',' VAR id ')' FIMFUNCTION 	{ fprintf(out_file, "Func Prof sem return"); }
 		;
-
-Return	:				{ $$=1; }		//caso não tenha nada o retorno é um inteiro
-			| VOID 		{ $$=0; }   //não existe return
-			;
 
 Body	: INSTINICIO { fprintf(out_file,"main:\n"); } Instrucoes INSTFIM { fprintf(out_file,"stop\n"); }
 		;
@@ -118,7 +114,7 @@ Instrucao 	: Atribuicao
 		| Input
 		| Output
 		| Ciclo
-		| id '(' Args ')' ';'		{ functionCall($1); }
+		| id '(' Args ')' ';'		{ functionCall($1,1); }
 		;
 
 Args :
@@ -160,7 +156,7 @@ Termo 		: Fator							{ $$ = $1;}
 
 Fator		: Valor						{ $$ = $1; }
 		| '(' Expressao ')'		{ $$ = $2; }
-		| id '(' Args ')'			{ functionCall($1); }
+		| id '(' Args ')'			{ functionCall($1,1); }
 		;
 
 OpMul		: '*'		{ $$ = "\tmul\n"; }
@@ -169,10 +165,10 @@ OpMul		: '*'		{ $$ = "\tmul\n"; }
 		;
 
 Condicional	: SE { initIF(); } '(' Condicao ')' ENTAO { thenIF(); } Instrucoes SENAO { elseIF(); } Instrucoes FIMSE	{ endIF(); }
-		;
+					;
 
 Ciclo	: ENQUANTO { initCiclo(); } '(' Condicao ')' { thenCiclo(); } ENTAO Instrucoes FIMENQUANTO	{ endCiclo(); }
-		;
+			;
 
 Input		: LER Endereco ';'		{ ler($2); }
 		;
@@ -235,12 +231,20 @@ void endCiclo(){
 	stackNivel--;
 }
 
-void functionCall(char* nameFuntion){
+void functionCall(char* nameFuntion, int needReturn){
 	Definition def;
 	if((def = getDefinition(tabela,nameFuntion,0))==NULL){
         fatal_error("Function not exist. Need to be declared");
     }else{
-			fprintf(out_file,"\tnop\n\tpusha %s\n\tcall\n",def->func->label);
+			if(needReturn==def->func->enableReturn==1){
+				fprintf(out_file,"\tnop\n\tpusha %s\n\tcall\n",def->func->label);
+			}else{
+				if(needReturn==1){
+					fatal_error("Function return a value. Call error");
+				}else{
+					fatal_error("Function not return a value. Call error");
+				}
+			}
 	  }
 }
 

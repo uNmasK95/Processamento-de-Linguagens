@@ -9,7 +9,7 @@ clean:
 lex.yy.c: roj.l
 	flex roj.l
 y.tab.c: roj.y
-	yacc -d roj.y
+	yacc -d -v roj.y
 
 teste:
 	./roj < Codigo\ em\ ROJ/contapares.roj

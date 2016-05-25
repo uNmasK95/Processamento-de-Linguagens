@@ -1,0 +1,1850 @@
+State 72 conflicts: 1 shift/reduce
+State 108 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: Programa $end
+
+    1 @1: /* empty */
+
+    2 Programa: INICIO Declaracoes @1 Functions Body FIM
+
+    3 Declaracoes: /* empty */
+    4            | Declaracoes Declaracao
+
+    5 Declaracao: VAR id ';'
+    6           | VAR id '=' numero ';'
+    7           | VAR id '[' num ']' ';'
+    8           | VAR id '[' num ']' '[' num ']' ';'
+
+    9 Functions: /* empty */
+   10          | Functions Function
+
+   11 @2: /* empty */
+
+   12 Function: FUNCTION id '(' ')' @2 Declaracoes Instrucoes RETURN Expressao FIMFUNCTION
+
+   13 @3: /* empty */
+
+   14 Function: VOID FUNCTION id '(' ')' @3 Declaracoes Instrucoes FIMFUNCTION
+   15         | FUNCTION id '(' VAR id ',' VAR id ')' FIMFUNCTION
+   16         | VOID FUNCTION id '(' VAR id ',' VAR id ')' FIMFUNCTION
+
+   17 @4: /* empty */
+
+   18 Body: INSTINICIO @4 Instrucoes INSTFIM
+
+   19 Instrucoes: /* empty */
+   20           | Instrucoes Instrucao
+
+   21 Instrucao: Atribuicao
+   22          | Condicional
+   23          | Input
+   24          | Output
+   25          | Ciclo
+   26          | id '(' Args ')' ';'
+
+   27 Args: /* empty */
+   28     | Args Arg
+
+   29 Arg: Expressao
+
+   30 @5: /* empty */
+
+   31 Atribuicao: Endereco @5 '=' Condicao ';'
+
+   32 Condicao: Expressao
+   33         | Expressao OpLog Expressao
+   34         | NOT Expressao
+
+   35 OpLog: AND
+   36      | OR
+
+   37 Expressao: Termo
+   38          | Expressao OpAdd Termo
+
+   39 OpAdd: '+'
+   40      | '-'
+   41      | DIFF
+   42      | GG
+   43      | LL
+   44      | GE
+   45      | LE
+   46      | EQ
+
+   47 Termo: Fator
+   48      | Termo OpMul Fator
+
+   49 Fator: Valor
+   50      | '(' Expressao ')'
+   51      | id '(' Args ')'
+
+   52 OpMul: '*'
+   53      | '/'
+   54      | '%'
+
+   55 @6: /* empty */
+
+   56 @7: /* empty */
+
+   57 @8: /* empty */
+
+   58 Condicional: SE @6 '(' Condicao ')' ENTAO @7 Instrucoes SENAO @8 Instrucoes FIMSE
+
+   59 @9: /* empty */
+
+   60 @10: /* empty */
+
+   61 Ciclo: ENQUANTO @9 '(' Condicao ')' @10 ENTAO Instrucoes FIMENQUANTO
+
+   62 Input: LER Endereco ';'
+
+   63 Output: IMPRIMIR Valor ';'
+
+   64 numero: num
+   65       | '-' num
+
+   66 Valor: numero
+   67      | Variavel
+
+   68 Endereco: id
+   69         | id '[' Expressao ']'
+   70         | id '[' Expressao ']' '[' Expressao ']'
+
+   71 Variavel: id
+   72         | id '[' Expressao ']'
+   73         | id '[' Expressao ']' '[' Expressao ']'
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'%' (37) 54
+'(' (40) 12 14 15 16 26 50 51 58 61
+')' (41) 12 14 15 16 26 50 51 58 61
+'*' (42) 52
+'+' (43) 39
+',' (44) 15 16
+'-' (45) 40 65
+'/' (47) 53
+';' (59) 5 6 7 8 26 31 62 63
+'=' (61) 6 31
+'[' (91) 7 8 69 70 72 73
+']' (93) 7 8 69 70 72 73
+error (256)
+INICIO (258) 2
+FIM (259) 2
+INSTINICIO (260) 18
+INSTFIM (261) 18
+VAR (262) 5 6 7 8 15 16
+SE (263) 58
+ENTAO (264) 58 61
+SENAO (265) 58
+FIMSE (266) 58
+ENQUANTO (267) 61
+FIMENQUANTO (268) 61
+IMPRIMIR (269) 63
+LER (270) 62
+DIFF (271) 41
+GG (272) 42
+LL (273) 43
+GE (274) 44
+LE (275) 45
+EQ (276) 46
+AND (277) 35
+OR (278) 36
+NOT (279) 34
+VOID (280) 14 16
+FUNCTION (281) 12 14 15 16
+FIMFUNCTION (282) 12 14 15 16
+RETURN (283) 12
+id (284) 5 6 7 8 12 14 15 16 26 51 68 69 70 71 72 73
+num (285) 7 8 64 65
+
+
+Nonterminals, with rules where they appear
+
+$accept (43)
+    on left: 0
+Programa (44)
+    on left: 2, on right: 0
+@1 (45)
+    on left: 1, on right: 2
+Declaracoes (46)
+    on left: 3 4, on right: 2 4 12 14
+Declaracao (47)
+    on left: 5 6 7 8, on right: 4
+Functions (48)
+    on left: 9 10, on right: 2 10
+Function (49)
+    on left: 12 14 15 16, on right: 10
+@2 (50)
+    on left: 11, on right: 12
+@3 (51)
+    on left: 13, on right: 14
+Body (52)
+    on left: 18, on right: 2
+@4 (53)
+    on left: 17, on right: 18
+Instrucoes (54)
+    on left: 19 20, on right: 12 14 18 20 58 61
+Instrucao (55)
+    on left: 21 22 23 24 25 26, on right: 20
+Args (56)
+    on left: 27 28, on right: 26 28 51
+Arg (57)
+    on left: 29, on right: 28
+Atribuicao (58)
+    on left: 31, on right: 21
+@5 (59)
+    on left: 30, on right: 31
+Condicao (60)
+    on left: 32 33 34, on right: 31 58 61
+OpLog (61)
+    on left: 35 36, on right: 33
+Expressao (62)
+    on left: 37 38, on right: 12 29 32 33 34 38 50 69 70 72 73
+OpAdd (63)
+    on left: 39 40 41 42 43 44 45 46, on right: 38
+Termo (64)
+    on left: 47 48, on right: 37 38 48
+Fator (65)
+    on left: 49 50 51, on right: 47 48
+OpMul (66)
+    on left: 52 53 54, on right: 48
+Condicional (67)
+    on left: 58, on right: 22
+@6 (68)
+    on left: 55, on right: 58
+@7 (69)
+    on left: 56, on right: 58
+@8 (70)
+    on left: 57, on right: 58
+Ciclo (71)
+    on left: 61, on right: 25
+@9 (72)
+    on left: 59, on right: 61
+@10 (73)
+    on left: 60, on right: 61
+Input (74)
+    on left: 62, on right: 23
+Output (75)
+    on left: 63, on right: 24
+numero (76)
+    on left: 64 65, on right: 6 66
+Valor (77)
+    on left: 66 67, on right: 49 63
+Endereco (78)
+    on left: 68 69 70, on right: 31 62
+Variavel (79)
+    on left: 71 72 73, on right: 67
+
+
+state 0
+
+    0 $accept: . Programa $end
+
+    INICIO  shift, and go to state 1
+
+    Programa  go to state 2
+
+
+state 1
+
+    2 Programa: INICIO . Declaracoes @1 Functions Body FIM
+
+    $default  reduce using rule 3 (Declaracoes)
+
+    Declaracoes  go to state 3
+
+
+state 2
+
+    0 $accept: Programa . $end
+
+    $end  shift, and go to state 4
+
+
+state 3
+
+    2 Programa: INICIO Declaracoes . @1 Functions Body FIM
+    4 Declaracoes: Declaracoes . Declaracao
+
+    VAR  shift, and go to state 5
+
+    $default  reduce using rule 1 (@1)
+
+    @1          go to state 6
+    Declaracao  go to state 7
+
+
+state 4
+
+    0 $accept: Programa $end .
+
+    $default  accept
+
+
+state 5
+
+    5 Declaracao: VAR . id ';'
+    6           | VAR . id '=' numero ';'
+    7           | VAR . id '[' num ']' ';'
+    8           | VAR . id '[' num ']' '[' num ']' ';'
+
+    id  shift, and go to state 8
+
+
+state 6
+
+    2 Programa: INICIO Declaracoes @1 . Functions Body FIM
+
+    $default  reduce using rule 9 (Functions)
+
+    Functions  go to state 9
+
+
+state 7
+
+    4 Declaracoes: Declaracoes Declaracao .
+
+    $default  reduce using rule 4 (Declaracoes)
+
+
+state 8
+
+    5 Declaracao: VAR id . ';'
+    6           | VAR id . '=' numero ';'
+    7           | VAR id . '[' num ']' ';'
+    8           | VAR id . '[' num ']' '[' num ']' ';'
+
+    ';'  shift, and go to state 10
+    '='  shift, and go to state 11
+    '['  shift, and go to state 12
+
+
+state 9
+
+    2 Programa: INICIO Declaracoes @1 Functions . Body FIM
+   10 Functions: Functions . Function
+
+    INSTINICIO  shift, and go to state 13
+    VOID        shift, and go to state 14
+    FUNCTION    shift, and go to state 15
+
+    Function  go to state 16
+    Body      go to state 17
+
+
+state 10
+
+    5 Declaracao: VAR id ';' .
+
+    $default  reduce using rule 5 (Declaracao)
+
+
+state 11
+
+    6 Declaracao: VAR id '=' . numero ';'
+
+    num  shift, and go to state 18
+    '-'  shift, and go to state 19
+
+    numero  go to state 20
+
+
+state 12
+
+    7 Declaracao: VAR id '[' . num ']' ';'
+    8           | VAR id '[' . num ']' '[' num ']' ';'
+
+    num  shift, and go to state 21
+
+
+state 13
+
+   18 Body: INSTINICIO . @4 Instrucoes INSTFIM
+
+    $default  reduce using rule 17 (@4)
+
+    @4  go to state 22
+
+
+state 14
+
+   14 Function: VOID . FUNCTION id '(' ')' @3 Declaracoes Instrucoes FIMFUNCTION
+   16         | VOID . FUNCTION id '(' VAR id ',' VAR id ')' FIMFUNCTION
+
+    FUNCTION  shift, and go to state 23
+
+
+state 15
+
+   12 Function: FUNCTION . id '(' ')' @2 Declaracoes Instrucoes RETURN Expressao FIMFUNCTION
+   15         | FUNCTION . id '(' VAR id ',' VAR id ')' FIMFUNCTION
+
+    id  shift, and go to state 24
+
+
+state 16
+
+   10 Functions: Functions Function .
+
+    $default  reduce using rule 10 (Functions)
+
+
+state 17
+
+    2 Programa: INICIO Declaracoes @1 Functions Body . FIM
+
+    FIM  shift, and go to state 25
+
+
+state 18
+
+   64 numero: num .
+
+    $default  reduce using rule 64 (numero)
+
+
+state 19
+
+   65 numero: '-' . num
+
+    num  shift, and go to state 26
+
+
+state 20
+
+    6 Declaracao: VAR id '=' numero . ';'
+
+    ';'  shift, and go to state 27
+
+
+state 21
+
+    7 Declaracao: VAR id '[' num . ']' ';'
+    8           | VAR id '[' num . ']' '[' num ']' ';'
+
+    ']'  shift, and go to state 28
+
+
+state 22
+
+   18 Body: INSTINICIO @4 . Instrucoes INSTFIM
+
+    $default  reduce using rule 19 (Instrucoes)
+
+    Instrucoes  go to state 29
+
+
+state 23
+
+   14 Function: VOID FUNCTION . id '(' ')' @3 Declaracoes Instrucoes FIMFUNCTION
+   16         | VOID FUNCTION . id '(' VAR id ',' VAR id ')' FIMFUNCTION
+
+    id  shift, and go to state 30
+
+
+state 24
+
+   12 Function: FUNCTION id . '(' ')' @2 Declaracoes Instrucoes RETURN Expressao FIMFUNCTION
+   15         | FUNCTION id . '(' VAR id ',' VAR id ')' FIMFUNCTION
+
+    '('  shift, and go to state 31
+
+
+state 25
+
+    2 Programa: INICIO Declaracoes @1 Functions Body FIM .
+
+    $default  reduce using rule 2 (Programa)
+
+
+state 26
+
+   65 numero: '-' num .
+
+    $default  reduce using rule 65 (numero)
+
+
+state 27
+
+    6 Declaracao: VAR id '=' numero ';' .
+
+    $default  reduce using rule 6 (Declaracao)
+
+
+state 28
+
+    7 Declaracao: VAR id '[' num ']' . ';'
+    8           | VAR id '[' num ']' . '[' num ']' ';'
+
+    ';'  shift, and go to state 32
+    '['  shift, and go to state 33
+
+
+state 29
+
+   18 Body: INSTINICIO @4 Instrucoes . INSTFIM
+   20 Instrucoes: Instrucoes . Instrucao
+
+    INSTFIM   shift, and go to state 34
+    SE        shift, and go to state 35
+    ENQUANTO  shift, and go to state 36
+    IMPRIMIR  shift, and go to state 37
+    LER       shift, and go to state 38
+    id        shift, and go to state 39
+
+    Instrucao    go to state 40
+    Atribuicao   go to state 41
+    Condicional  go to state 42
+    Ciclo        go to state 43
+    Input        go to state 44
+    Output       go to state 45
+    Endereco     go to state 46
+
+
+state 30
+
+   14 Function: VOID FUNCTION id . '(' ')' @3 Declaracoes Instrucoes FIMFUNCTION
+   16         | VOID FUNCTION id . '(' VAR id ',' VAR id ')' FIMFUNCTION
+
+    '('  shift, and go to state 47
+
+
+state 31
+
+   12 Function: FUNCTION id '(' . ')' @2 Declaracoes Instrucoes RETURN Expressao FIMFUNCTION
+   15         | FUNCTION id '(' . VAR id ',' VAR id ')' FIMFUNCTION
+
+    VAR  shift, and go to state 48
+    ')'  shift, and go to state 49
+
+
+state 32
+
+    7 Declaracao: VAR id '[' num ']' ';' .
+
+    $default  reduce using rule 7 (Declaracao)
+
+
+state 33
+
+    8 Declaracao: VAR id '[' num ']' '[' . num ']' ';'
+
+    num  shift, and go to state 50
+
+
+state 34
+
+   18 Body: INSTINICIO @4 Instrucoes INSTFIM .
+
+    $default  reduce using rule 18 (Body)
+
+
+state 35
+
+   58 Condicional: SE . @6 '(' Condicao ')' ENTAO @7 Instrucoes SENAO @8 Instrucoes FIMSE
+
+    $default  reduce using rule 55 (@6)
+
+    @6  go to state 51
+
+
+state 36
+
+   61 Ciclo: ENQUANTO . @9 '(' Condicao ')' @10 ENTAO Instrucoes FIMENQUANTO
+
+    $default  reduce using rule 59 (@9)
+
+    @9  go to state 52
+
+
+state 37
+
+   63 Output: IMPRIMIR . Valor ';'
+
+    id   shift, and go to state 53
+    num  shift, and go to state 18
+    '-'  shift, and go to state 19
+
+    numero    go to state 54
+    Valor     go to state 55
+    Variavel  go to state 56
+
+
+state 38
+
+   62 Input: LER . Endereco ';'
+
+    id  shift, and go to state 57
+
+    Endereco  go to state 58
+
+
+state 39
+
+   26 Instrucao: id . '(' Args ')' ';'
+   68 Endereco: id .
+   69         | id . '[' Expressao ']'
+   70         | id . '[' Expressao ']' '[' Expressao ']'
+
+    '['  shift, and go to state 59
+    '('  shift, and go to state 60
+
+    $default  reduce using rule 68 (Endereco)
+
+
+state 40
+
+   20 Instrucoes: Instrucoes Instrucao .
+
+    $default  reduce using rule 20 (Instrucoes)
+
+
+state 41
+
+   21 Instrucao: Atribuicao .
+
+    $default  reduce using rule 21 (Instrucao)
+
+
+state 42
+
+   22 Instrucao: Condicional .
+
+    $default  reduce using rule 22 (Instrucao)
+
+
+state 43
+
+   25 Instrucao: Ciclo .
+
+    $default  reduce using rule 25 (Instrucao)
+
+
+state 44
+
+   23 Instrucao: Input .
+
+    $default  reduce using rule 23 (Instrucao)
+
+
+state 45
+
+   24 Instrucao: Output .
+
+    $default  reduce using rule 24 (Instrucao)
+
+
+state 46
+
+   31 Atribuicao: Endereco . @5 '=' Condicao ';'
+
+    $default  reduce using rule 30 (@5)
+
+    @5  go to state 61
+
+
+state 47
+
+   14 Function: VOID FUNCTION id '(' . ')' @3 Declaracoes Instrucoes FIMFUNCTION
+   16         | VOID FUNCTION id '(' . VAR id ',' VAR id ')' FIMFUNCTION
+
+    VAR  shift, and go to state 62
+    ')'  shift, and go to state 63
+
+
+state 48
+
+   15 Function: FUNCTION id '(' VAR . id ',' VAR id ')' FIMFUNCTION
+
+    id  shift, and go to state 64
+
+
+state 49
+
+   12 Function: FUNCTION id '(' ')' . @2 Declaracoes Instrucoes RETURN Expressao FIMFUNCTION
+
+    $default  reduce using rule 11 (@2)
+
+    @2  go to state 65
+
+
+state 50
+
+    8 Declaracao: VAR id '[' num ']' '[' num . ']' ';'
+
+    ']'  shift, and go to state 66
+
+
+state 51
+
+   58 Condicional: SE @6 . '(' Condicao ')' ENTAO @7 Instrucoes SENAO @8 Instrucoes FIMSE
+
+    '('  shift, and go to state 67
+
+
+state 52
+
+   61 Ciclo: ENQUANTO @9 . '(' Condicao ')' @10 ENTAO Instrucoes FIMENQUANTO
+
+    '('  shift, and go to state 68
+
+
+state 53
+
+   71 Variavel: id .
+   72         | id . '[' Expressao ']'
+   73         | id . '[' Expressao ']' '[' Expressao ']'
+
+    '['  shift, and go to state 69
+
+    $default  reduce using rule 71 (Variavel)
+
+
+state 54
+
+   66 Valor: numero .
+
+    $default  reduce using rule 66 (Valor)
+
+
+state 55
+
+   63 Output: IMPRIMIR Valor . ';'
+
+    ';'  shift, and go to state 70
+
+
+state 56
+
+   67 Valor: Variavel .
+
+    $default  reduce using rule 67 (Valor)
+
+
+state 57
+
+   68 Endereco: id .
+   69         | id . '[' Expressao ']'
+   70         | id . '[' Expressao ']' '[' Expressao ']'
+
+    '['  shift, and go to state 59
+
+    $default  reduce using rule 68 (Endereco)
+
+
+state 58
+
+   62 Input: LER Endereco . ';'
+
+    ';'  shift, and go to state 71
+
+
+state 59
+
+   69 Endereco: id '[' . Expressao ']'
+   70         | id '[' . Expressao ']' '[' Expressao ']'
+
+    id   shift, and go to state 72
+    num  shift, and go to state 18
+    '('  shift, and go to state 73
+    '-'  shift, and go to state 19
+
+    Expressao  go to state 74
+    Termo      go to state 75
+    Fator      go to state 76
+    numero     go to state 54
+    Valor      go to state 77
+    Variavel   go to state 56
+
+
+state 60
+
+   26 Instrucao: id '(' . Args ')' ';'
+
+    $default  reduce using rule 27 (Args)
+
+    Args  go to state 78
+
+
+state 61
+
+   31 Atribuicao: Endereco @5 . '=' Condicao ';'
+
+    '='  shift, and go to state 79
+
+
+state 62
+
+   16 Function: VOID FUNCTION id '(' VAR . id ',' VAR id ')' FIMFUNCTION
+
+    id  shift, and go to state 80
+
+
+state 63
+
+   14 Function: VOID FUNCTION id '(' ')' . @3 Declaracoes Instrucoes FIMFUNCTION
+
+    $default  reduce using rule 13 (@3)
+
+    @3  go to state 81
+
+
+state 64
+
+   15 Function: FUNCTION id '(' VAR id . ',' VAR id ')' FIMFUNCTION
+
+    ','  shift, and go to state 82
+
+
+state 65
+
+   12 Function: FUNCTION id '(' ')' @2 . Declaracoes Instrucoes RETURN Expressao FIMFUNCTION
+
+    $default  reduce using rule 3 (Declaracoes)
+
+    Declaracoes  go to state 83
+
+
+state 66
+
+    8 Declaracao: VAR id '[' num ']' '[' num ']' . ';'
+
+    ';'  shift, and go to state 84
+
+
+state 67
+
+   58 Condicional: SE @6 '(' . Condicao ')' ENTAO @7 Instrucoes SENAO @8 Instrucoes FIMSE
+
+    NOT  shift, and go to state 85
+    id   shift, and go to state 72
+    num  shift, and go to state 18
+    '('  shift, and go to state 73
+    '-'  shift, and go to state 19
+
+    Condicao   go to state 86
+    Expressao  go to state 87
+    Termo      go to state 75
+    Fator      go to state 76
+    numero     go to state 54
+    Valor      go to state 77
+    Variavel   go to state 56
+
+
+state 68
+
+   61 Ciclo: ENQUANTO @9 '(' . Condicao ')' @10 ENTAO Instrucoes FIMENQUANTO
+
+    NOT  shift, and go to state 85
+    id   shift, and go to state 72
+    num  shift, and go to state 18
+    '('  shift, and go to state 73
+    '-'  shift, and go to state 19
+
+    Condicao   go to state 88
+    Expressao  go to state 87
+    Termo      go to state 75
+    Fator      go to state 76
+    numero     go to state 54
+    Valor      go to state 77
+    Variavel   go to state 56
+
+
+state 69
+
+   72 Variavel: id '[' . Expressao ']'
+   73         | id '[' . Expressao ']' '[' Expressao ']'
+
+    id   shift, and go to state 72
+    num  shift, and go to state 18
+    '('  shift, and go to state 73
+    '-'  shift, and go to state 19
+
+    Expressao  go to state 89
+    Termo      go to state 75
+    Fator      go to state 76
+    numero     go to state 54
+    Valor      go to state 77
+    Variavel   go to state 56
+
+
+state 70
+
+   63 Output: IMPRIMIR Valor ';' .
+
+    $default  reduce using rule 63 (Output)
+
+
+state 71
+
+   62 Input: LER Endereco ';' .
+
+    $default  reduce using rule 62 (Input)
+
+
+state 72
+
+   51 Fator: id . '(' Args ')'
+   71 Variavel: id .
+   72         | id . '[' Expressao ']'
+   73         | id . '[' Expressao ']' '[' Expressao ']'
+
+    '['  shift, and go to state 69
+    '('  shift, and go to state 90
+
+    '('       [reduce using rule 71 (Variavel)]
+    $default  reduce using rule 71 (Variavel)
+
+
+state 73
+
+   50 Fator: '(' . Expressao ')'
+
+    id   shift, and go to state 72
+    num  shift, and go to state 18
+    '('  shift, and go to state 73
+    '-'  shift, and go to state 19
+
+    Expressao  go to state 91
+    Termo      go to state 75
+    Fator      go to state 76
+    numero     go to state 54
+    Valor      go to state 77
+    Variavel   go to state 56
+
+
+state 74
+
+   38 Expressao: Expressao . OpAdd Termo
+   69 Endereco: id '[' Expressao . ']'
+   70         | id '[' Expressao . ']' '[' Expressao ']'
+
+    DIFF  shift, and go to state 92
+    GG    shift, and go to state 93
+    LL    shift, and go to state 94
+    GE    shift, and go to state 95
+    LE    shift, and go to state 96
+    EQ    shift, and go to state 97
+    ']'   shift, and go to state 98
+    '+'   shift, and go to state 99
+    '-'   shift, and go to state 100
+
+    OpAdd  go to state 101
+
+
+state 75
+
+   37 Expressao: Termo .
+   48 Termo: Termo . OpMul Fator
+
+    '*'  shift, and go to state 102
+    '/'  shift, and go to state 103
+    '%'  shift, and go to state 104
+
+    $default  reduce using rule 37 (Expressao)
+
+    OpMul  go to state 105
+
+
+state 76
+
+   47 Termo: Fator .
+
+    $default  reduce using rule 47 (Termo)
+
+
+state 77
+
+   49 Fator: Valor .
+
+    $default  reduce using rule 49 (Fator)
+
+
+state 78
+
+   26 Instrucao: id '(' Args . ')' ';'
+   28 Args: Args . Arg
+
+    id   shift, and go to state 72
+    num  shift, and go to state 18
+    '('  shift, and go to state 73
+    ')'  shift, and go to state 106
+    '-'  shift, and go to state 19
+
+    Arg        go to state 107
+    Expressao  go to state 108
+    Termo      go to state 75
+    Fator      go to state 76
+    numero     go to state 54
+    Valor      go to state 77
+    Variavel   go to state 56
+
+
+state 79
+
+   31 Atribuicao: Endereco @5 '=' . Condicao ';'
+
+    NOT  shift, and go to state 85
+    id   shift, and go to state 72
+    num  shift, and go to state 18
+    '('  shift, and go to state 73
+    '-'  shift, and go to state 19
+
+    Condicao   go to state 109
+    Expressao  go to state 87
+    Termo      go to state 75
+    Fator      go to state 76
+    numero     go to state 54
+    Valor      go to state 77
+    Variavel   go to state 56
+
+
+state 80
+
+   16 Function: VOID FUNCTION id '(' VAR id . ',' VAR id ')' FIMFUNCTION
+
+    ','  shift, and go to state 110
+
+
+state 81
+
+   14 Function: VOID FUNCTION id '(' ')' @3 . Declaracoes Instrucoes FIMFUNCTION
+
+    $default  reduce using rule 3 (Declaracoes)
+
+    Declaracoes  go to state 111
+
+
+state 82
+
+   15 Function: FUNCTION id '(' VAR id ',' . VAR id ')' FIMFUNCTION
+
+    VAR  shift, and go to state 112
+
+
+state 83
+
+    4 Declaracoes: Declaracoes . Declaracao
+   12 Function: FUNCTION id '(' ')' @2 Declaracoes . Instrucoes RETURN Expressao FIMFUNCTION
+
+    VAR  shift, and go to state 5
+
+    $default  reduce using rule 19 (Instrucoes)
+
+    Declaracao  go to state 7
+    Instrucoes  go to state 113
+
+
+state 84
+
+    8 Declaracao: VAR id '[' num ']' '[' num ']' ';' .
+
+    $default  reduce using rule 8 (Declaracao)
+
+
+state 85
+
+   34 Condicao: NOT . Expressao
+
+    id   shift, and go to state 72
+    num  shift, and go to state 18
+    '('  shift, and go to state 73
+    '-'  shift, and go to state 19
+
+    Expressao  go to state 114
+    Termo      go to state 75
+    Fator      go to state 76
+    numero     go to state 54
+    Valor      go to state 77
+    Variavel   go to state 56
+
+
+state 86
+
+   58 Condicional: SE @6 '(' Condicao . ')' ENTAO @7 Instrucoes SENAO @8 Instrucoes FIMSE
+
+    ')'  shift, and go to state 115
+
+
+state 87
+
+   32 Condicao: Expressao .
+   33         | Expressao . OpLog Expressao
+   38 Expressao: Expressao . OpAdd Termo
+
+    DIFF  shift, and go to state 92
+    GG    shift, and go to state 93
+    LL    shift, and go to state 94
+    GE    shift, and go to state 95
+    LE    shift, and go to state 96
+    EQ    shift, and go to state 97
+    AND   shift, and go to state 116
+    OR    shift, and go to state 117
+    '+'   shift, and go to state 99
+    '-'   shift, and go to state 100
+
+    $default  reduce using rule 32 (Condicao)
+
+    OpLog  go to state 118
+    OpAdd  go to state 101
+
+
+state 88
+
+   61 Ciclo: ENQUANTO @9 '(' Condicao . ')' @10 ENTAO Instrucoes FIMENQUANTO
+
+    ')'  shift, and go to state 119
+
+
+state 89
+
+   38 Expressao: Expressao . OpAdd Termo
+   72 Variavel: id '[' Expressao . ']'
+   73         | id '[' Expressao . ']' '[' Expressao ']'
+
+    DIFF  shift, and go to state 92
+    GG    shift, and go to state 93
+    LL    shift, and go to state 94
+    GE    shift, and go to state 95
+    LE    shift, and go to state 96
+    EQ    shift, and go to state 97
+    ']'   shift, and go to state 120
+    '+'   shift, and go to state 99
+    '-'   shift, and go to state 100
+
+    OpAdd  go to state 101
+
+
+state 90
+
+   51 Fator: id '(' . Args ')'
+
+    $default  reduce using rule 27 (Args)
+
+    Args  go to state 121
+
+
+state 91
+
+   38 Expressao: Expressao . OpAdd Termo
+   50 Fator: '(' Expressao . ')'
+
+    DIFF  shift, and go to state 92
+    GG    shift, and go to state 93
+    LL    shift, and go to state 94
+    GE    shift, and go to state 95
+    LE    shift, and go to state 96
+    EQ    shift, and go to state 97
+    ')'   shift, and go to state 122
+    '+'   shift, and go to state 99
+    '-'   shift, and go to state 100
+
+    OpAdd  go to state 101
+
+
+state 92
+
+   41 OpAdd: DIFF .
+
+    $default  reduce using rule 41 (OpAdd)
+
+
+state 93
+
+   42 OpAdd: GG .
+
+    $default  reduce using rule 42 (OpAdd)
+
+
+state 94
+
+   43 OpAdd: LL .
+
+    $default  reduce using rule 43 (OpAdd)
+
+
+state 95
+
+   44 OpAdd: GE .
+
+    $default  reduce using rule 44 (OpAdd)
+
+
+state 96
+
+   45 OpAdd: LE .
+
+    $default  reduce using rule 45 (OpAdd)
+
+
+state 97
+
+   46 OpAdd: EQ .
+
+    $default  reduce using rule 46 (OpAdd)
+
+
+state 98
+
+   69 Endereco: id '[' Expressao ']' .
+   70         | id '[' Expressao ']' . '[' Expressao ']'
+
+    '['  shift, and go to state 123
+
+    $default  reduce using rule 69 (Endereco)
+
+
+state 99
+
+   39 OpAdd: '+' .
+
+    $default  reduce using rule 39 (OpAdd)
+
+
+state 100
+
+   40 OpAdd: '-' .
+
+    $default  reduce using rule 40 (OpAdd)
+
+
+state 101
+
+   38 Expressao: Expressao OpAdd . Termo
+
+    id   shift, and go to state 72
+    num  shift, and go to state 18
+    '('  shift, and go to state 73
+    '-'  shift, and go to state 19
+
+    Termo     go to state 124
+    Fator     go to state 76
+    numero    go to state 54
+    Valor     go to state 77
+    Variavel  go to state 56
+
+
+state 102
+
+   52 OpMul: '*' .
+
+    $default  reduce using rule 52 (OpMul)
+
+
+state 103
+
+   53 OpMul: '/' .
+
+    $default  reduce using rule 53 (OpMul)
+
+
+state 104
+
+   54 OpMul: '%' .
+
+    $default  reduce using rule 54 (OpMul)
+
+
+state 105
+
+   48 Termo: Termo OpMul . Fator
+
+    id   shift, and go to state 72
+    num  shift, and go to state 18
+    '('  shift, and go to state 73
+    '-'  shift, and go to state 19
+
+    Fator     go to state 125
+    numero    go to state 54
+    Valor     go to state 77
+    Variavel  go to state 56
+
+
+state 106
+
+   26 Instrucao: id '(' Args ')' . ';'
+
+    ';'  shift, and go to state 126
+
+
+state 107
+
+   28 Args: Args Arg .
+
+    $default  reduce using rule 28 (Args)
+
+
+state 108
+
+   29 Arg: Expressao .
+   38 Expressao: Expressao . OpAdd Termo
+
+    DIFF  shift, and go to state 92
+    GG    shift, and go to state 93
+    LL    shift, and go to state 94
+    GE    shift, and go to state 95
+    LE    shift, and go to state 96
+    EQ    shift, and go to state 97
+    '+'   shift, and go to state 99
+    '-'   shift, and go to state 100
+
+    '-'       [reduce using rule 29 (Arg)]
+    $default  reduce using rule 29 (Arg)
+
+    OpAdd  go to state 101
+
+
+state 109
+
+   31 Atribuicao: Endereco @5 '=' Condicao . ';'
+
+    ';'  shift, and go to state 127
+
+
+state 110
+
+   16 Function: VOID FUNCTION id '(' VAR id ',' . VAR id ')' FIMFUNCTION
+
+    VAR  shift, and go to state 128
+
+
+state 111
+
+    4 Declaracoes: Declaracoes . Declaracao
+   14 Function: VOID FUNCTION id '(' ')' @3 Declaracoes . Instrucoes FIMFUNCTION
+
+    VAR  shift, and go to state 5
+
+    $default  reduce using rule 19 (Instrucoes)
+
+    Declaracao  go to state 7
+    Instrucoes  go to state 129
+
+
+state 112
+
+   15 Function: FUNCTION id '(' VAR id ',' VAR . id ')' FIMFUNCTION
+
+    id  shift, and go to state 130
+
+
+state 113
+
+   12 Function: FUNCTION id '(' ')' @2 Declaracoes Instrucoes . RETURN Expressao FIMFUNCTION
+   20 Instrucoes: Instrucoes . Instrucao
+
+    SE        shift, and go to state 35
+    ENQUANTO  shift, and go to state 36
+    IMPRIMIR  shift, and go to state 37
+    LER       shift, and go to state 38
+    RETURN    shift, and go to state 131
+    id        shift, and go to state 39
+
+    Instrucao    go to state 40
+    Atribuicao   go to state 41
+    Condicional  go to state 42
+    Ciclo        go to state 43
+    Input        go to state 44
+    Output       go to state 45
+    Endereco     go to state 46
+
+
+state 114
+
+   34 Condicao: NOT Expressao .
+   38 Expressao: Expressao . OpAdd Termo
+
+    DIFF  shift, and go to state 92
+    GG    shift, and go to state 93
+    LL    shift, and go to state 94
+    GE    shift, and go to state 95
+    LE    shift, and go to state 96
+    EQ    shift, and go to state 97
+    '+'   shift, and go to state 99
+    '-'   shift, and go to state 100
+
+    $default  reduce using rule 34 (Condicao)
+
+    OpAdd  go to state 101
+
+
+state 115
+
+   58 Condicional: SE @6 '(' Condicao ')' . ENTAO @7 Instrucoes SENAO @8 Instrucoes FIMSE
+
+    ENTAO  shift, and go to state 132
+
+
+state 116
+
+   35 OpLog: AND .
+
+    $default  reduce using rule 35 (OpLog)
+
+
+state 117
+
+   36 OpLog: OR .
+
+    $default  reduce using rule 36 (OpLog)
+
+
+state 118
+
+   33 Condicao: Expressao OpLog . Expressao
+
+    id   shift, and go to state 72
+    num  shift, and go to state 18
+    '('  shift, and go to state 73
+    '-'  shift, and go to state 19
+
+    Expressao  go to state 133
+    Termo      go to state 75
+    Fator      go to state 76
+    numero     go to state 54
+    Valor      go to state 77
+    Variavel   go to state 56
+
+
+state 119
+
+   61 Ciclo: ENQUANTO @9 '(' Condicao ')' . @10 ENTAO Instrucoes FIMENQUANTO
+
+    $default  reduce using rule 60 (@10)
+
+    @10  go to state 134
+
+
+state 120
+
+   72 Variavel: id '[' Expressao ']' .
+   73         | id '[' Expressao ']' . '[' Expressao ']'
+
+    '['  shift, and go to state 135
+
+    $default  reduce using rule 72 (Variavel)
+
+
+state 121
+
+   28 Args: Args . Arg
+   51 Fator: id '(' Args . ')'
+
+    id   shift, and go to state 72
+    num  shift, and go to state 18
+    '('  shift, and go to state 73
+    ')'  shift, and go to state 136
+    '-'  shift, and go to state 19
+
+    Arg        go to state 107
+    Expressao  go to state 108
+    Termo      go to state 75
+    Fator      go to state 76
+    numero     go to state 54
+    Valor      go to state 77
+    Variavel   go to state 56
+
+
+state 122
+
+   50 Fator: '(' Expressao ')' .
+
+    $default  reduce using rule 50 (Fator)
+
+
+state 123
+
+   70 Endereco: id '[' Expressao ']' '[' . Expressao ']'
+
+    id   shift, and go to state 72
+    num  shift, and go to state 18
+    '('  shift, and go to state 73
+    '-'  shift, and go to state 19
+
+    Expressao  go to state 137
+    Termo      go to state 75
+    Fator      go to state 76
+    numero     go to state 54
+    Valor      go to state 77
+    Variavel   go to state 56
+
+
+state 124
+
+   38 Expressao: Expressao OpAdd Termo .
+   48 Termo: Termo . OpMul Fator
+
+    '*'  shift, and go to state 102
+    '/'  shift, and go to state 103
+    '%'  shift, and go to state 104
+
+    $default  reduce using rule 38 (Expressao)
+
+    OpMul  go to state 105
+
+
+state 125
+
+   48 Termo: Termo OpMul Fator .
+
+    $default  reduce using rule 48 (Termo)
+
+
+state 126
+
+   26 Instrucao: id '(' Args ')' ';' .
+
+    $default  reduce using rule 26 (Instrucao)
+
+
+state 127
+
+   31 Atribuicao: Endereco @5 '=' Condicao ';' .
+
+    $default  reduce using rule 31 (Atribuicao)
+
+
+state 128
+
+   16 Function: VOID FUNCTION id '(' VAR id ',' VAR . id ')' FIMFUNCTION
+
+    id  shift, and go to state 138
+
+
+state 129
+
+   14 Function: VOID FUNCTION id '(' ')' @3 Declaracoes Instrucoes . FIMFUNCTION
+   20 Instrucoes: Instrucoes . Instrucao
+
+    SE           shift, and go to state 35
+    ENQUANTO     shift, and go to state 36
+    IMPRIMIR     shift, and go to state 37
+    LER          shift, and go to state 38
+    FIMFUNCTION  shift, and go to state 139
+    id           shift, and go to state 39
+
+    Instrucao    go to state 40
+    Atribuicao   go to state 41
+    Condicional  go to state 42
+    Ciclo        go to state 43
+    Input        go to state 44
+    Output       go to state 45
+    Endereco     go to state 46
+
+
+state 130
+
+   15 Function: FUNCTION id '(' VAR id ',' VAR id . ')' FIMFUNCTION
+
+    ')'  shift, and go to state 140
+
+
+state 131
+
+   12 Function: FUNCTION id '(' ')' @2 Declaracoes Instrucoes RETURN . Expressao FIMFUNCTION
+
+    id   shift, and go to state 72
+    num  shift, and go to state 18
+    '('  shift, and go to state 73
+    '-'  shift, and go to state 19
+
+    Expressao  go to state 141
+    Termo      go to state 75
+    Fator      go to state 76
+    numero     go to state 54
+    Valor      go to state 77
+    Variavel   go to state 56
+
+
+state 132
+
+   58 Condicional: SE @6 '(' Condicao ')' ENTAO . @7 Instrucoes SENAO @8 Instrucoes FIMSE
+
+    $default  reduce using rule 56 (@7)
+
+    @7  go to state 142
+
+
+state 133
+
+   33 Condicao: Expressao OpLog Expressao .
+   38 Expressao: Expressao . OpAdd Termo
+
+    DIFF  shift, and go to state 92
+    GG    shift, and go to state 93
+    LL    shift, and go to state 94
+    GE    shift, and go to state 95
+    LE    shift, and go to state 96
+    EQ    shift, and go to state 97
+    '+'   shift, and go to state 99
+    '-'   shift, and go to state 100
+
+    $default  reduce using rule 33 (Condicao)
+
+    OpAdd  go to state 101
+
+
+state 134
+
+   61 Ciclo: ENQUANTO @9 '(' Condicao ')' @10 . ENTAO Instrucoes FIMENQUANTO
+
+    ENTAO  shift, and go to state 143
+
+
+state 135
+
+   73 Variavel: id '[' Expressao ']' '[' . Expressao ']'
+
+    id   shift, and go to state 72
+    num  shift, and go to state 18
+    '('  shift, and go to state 73
+    '-'  shift, and go to state 19
+
+    Expressao  go to state 144
+    Termo      go to state 75
+    Fator      go to state 76
+    numero     go to state 54
+    Valor      go to state 77
+    Variavel   go to state 56
+
+
+state 136
+
+   51 Fator: id '(' Args ')' .
+
+    $default  reduce using rule 51 (Fator)
+
+
+state 137
+
+   38 Expressao: Expressao . OpAdd Termo
+   70 Endereco: id '[' Expressao ']' '[' Expressao . ']'
+
+    DIFF  shift, and go to state 92
+    GG    shift, and go to state 93
+    LL    shift, and go to state 94
+    GE    shift, and go to state 95
+    LE    shift, and go to state 96
+    EQ    shift, and go to state 97
+    ']'   shift, and go to state 145
+    '+'   shift, and go to state 99
+    '-'   shift, and go to state 100
+
+    OpAdd  go to state 101
+
+
+state 138
+
+   16 Function: VOID FUNCTION id '(' VAR id ',' VAR id . ')' FIMFUNCTION
+
+    ')'  shift, and go to state 146
+
+
+state 139
+
+   14 Function: VOID FUNCTION id '(' ')' @3 Declaracoes Instrucoes FIMFUNCTION .
+
+    $default  reduce using rule 14 (Function)
+
+
+state 140
+
+   15 Function: FUNCTION id '(' VAR id ',' VAR id ')' . FIMFUNCTION
+
+    FIMFUNCTION  shift, and go to state 147
+
+
+state 141
+
+   12 Function: FUNCTION id '(' ')' @2 Declaracoes Instrucoes RETURN Expressao . FIMFUNCTION
+   38 Expressao: Expressao . OpAdd Termo
+
+    DIFF         shift, and go to state 92
+    GG           shift, and go to state 93
+    LL           shift, and go to state 94
+    GE           shift, and go to state 95
+    LE           shift, and go to state 96
+    EQ           shift, and go to state 97
+    FIMFUNCTION  shift, and go to state 148
+    '+'          shift, and go to state 99
+    '-'          shift, and go to state 100
+
+    OpAdd  go to state 101
+
+
+state 142
+
+   58 Condicional: SE @6 '(' Condicao ')' ENTAO @7 . Instrucoes SENAO @8 Instrucoes FIMSE
+
+    $default  reduce using rule 19 (Instrucoes)
+
+    Instrucoes  go to state 149
+
+
+state 143
+
+   61 Ciclo: ENQUANTO @9 '(' Condicao ')' @10 ENTAO . Instrucoes FIMENQUANTO
+
+    $default  reduce using rule 19 (Instrucoes)
+
+    Instrucoes  go to state 150
+
+
+state 144
+
+   38 Expressao: Expressao . OpAdd Termo
+   73 Variavel: id '[' Expressao ']' '[' Expressao . ']'
+
+    DIFF  shift, and go to state 92
+    GG    shift, and go to state 93
+    LL    shift, and go to state 94
+    GE    shift, and go to state 95
+    LE    shift, and go to state 96
+    EQ    shift, and go to state 97
+    ']'   shift, and go to state 151
+    '+'   shift, and go to state 99
+    '-'   shift, and go to state 100
+
+    OpAdd  go to state 101
+
+
+state 145
+
+   70 Endereco: id '[' Expressao ']' '[' Expressao ']' .
+
+    $default  reduce using rule 70 (Endereco)
+
+
+state 146
+
+   16 Function: VOID FUNCTION id '(' VAR id ',' VAR id ')' . FIMFUNCTION
+
+    FIMFUNCTION  shift, and go to state 152
+
+
+state 147
+
+   15 Function: FUNCTION id '(' VAR id ',' VAR id ')' FIMFUNCTION .
+
+    $default  reduce using rule 15 (Function)
+
+
+state 148
+
+   12 Function: FUNCTION id '(' ')' @2 Declaracoes Instrucoes RETURN Expressao FIMFUNCTION .
+
+    $default  reduce using rule 12 (Function)
+
+
+state 149
+
+   20 Instrucoes: Instrucoes . Instrucao
+   58 Condicional: SE @6 '(' Condicao ')' ENTAO @7 Instrucoes . SENAO @8 Instrucoes FIMSE
+
+    SE        shift, and go to state 35
+    SENAO     shift, and go to state 153
+    ENQUANTO  shift, and go to state 36
+    IMPRIMIR  shift, and go to state 37
+    LER       shift, and go to state 38
+    id        shift, and go to state 39
+
+    Instrucao    go to state 40
+    Atribuicao   go to state 41
+    Condicional  go to state 42
+    Ciclo        go to state 43
+    Input        go to state 44
+    Output       go to state 45
+    Endereco     go to state 46
+
+
+state 150
+
+   20 Instrucoes: Instrucoes . Instrucao
+   61 Ciclo: ENQUANTO @9 '(' Condicao ')' @10 ENTAO Instrucoes . FIMENQUANTO
+
+    SE           shift, and go to state 35
+    ENQUANTO     shift, and go to state 36
+    FIMENQUANTO  shift, and go to state 154
+    IMPRIMIR     shift, and go to state 37
+    LER          shift, and go to state 38
+    id           shift, and go to state 39
+
+    Instrucao    go to state 40
+    Atribuicao   go to state 41
+    Condicional  go to state 42
+    Ciclo        go to state 43
+    Input        go to state 44
+    Output       go to state 45
+    Endereco     go to state 46
+
+
+state 151
+
+   73 Variavel: id '[' Expressao ']' '[' Expressao ']' .
+
+    $default  reduce using rule 73 (Variavel)
+
+
+state 152
+
+   16 Function: VOID FUNCTION id '(' VAR id ',' VAR id ')' FIMFUNCTION .
+
+    $default  reduce using rule 16 (Function)
+
+
+state 153
+
+   58 Condicional: SE @6 '(' Condicao ')' ENTAO @7 Instrucoes SENAO . @8 Instrucoes FIMSE
+
+    $default  reduce using rule 57 (@8)
+
+    @8  go to state 155
+
+
+state 154
+
+   61 Ciclo: ENQUANTO @9 '(' Condicao ')' @10 ENTAO Instrucoes FIMENQUANTO .
+
+    $default  reduce using rule 61 (Ciclo)
+
+
+state 155
+
+   58 Condicional: SE @6 '(' Condicao ')' ENTAO @7 Instrucoes SENAO @8 . Instrucoes FIMSE
+
+    $default  reduce using rule 19 (Instrucoes)
+
+    Instrucoes  go to state 156
+
+
+state 156
+
+   20 Instrucoes: Instrucoes . Instrucao
+   58 Condicional: SE @6 '(' Condicao ')' ENTAO @7 Instrucoes SENAO @8 Instrucoes . FIMSE
+
+    SE        shift, and go to state 35
+    FIMSE     shift, and go to state 157
+    ENQUANTO  shift, and go to state 36
+    IMPRIMIR  shift, and go to state 37
+    LER       shift, and go to state 38
+    id        shift, and go to state 39
+
+    Instrucao    go to state 40
+    Atribuicao   go to state 41
+    Condicional  go to state 42
+    Ciclo        go to state 43
+    Input        go to state 44
+    Output       go to state 45
+    Endereco     go to state 46
+
+
+state 157
+
+   58 Condicional: SE @6 '(' Condicao ')' ENTAO @7 Instrucoes SENAO @8 Instrucoes FIMSE .
+
+    $default  reduce using rule 58 (Condicional)
