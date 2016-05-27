@@ -102,7 +102,7 @@ Function : FUNCTION id '('   ')' { currPointer=0; declaracaoFunction($2,1); make
 		| VOID FUNCTION id '(' VAR id ',' VAR id ')' FIMFUNCTION 	{ fprintf(out_file, "Func Prof sem return"); }
 		;
 
-Body	: INSTINICIO { fprintf(out_file,"main:\n"); } Instrucoes INSTFIM { fprintf(out_file,"stop\n"); }
+Body	: INSTINICIO { fprintf(out_file,"start\nmain:\n"); } Instrucoes INSTFIM { fprintf(out_file,"stop\n"); }
 		;
 
 Instrucoes	:
