@@ -289,7 +289,7 @@ char* pushVariavel(char* var){
 	if(makeFunction==1){ //estamos a defenir variaveis de uma função
 		def = getDefinition(tabelaFuntion,var,1);
 		if(def==NULL){
-			fatal_error("Variavel não defenida"); //ver isto que dá erro
+			fatal_error("Variavel não definida"); //ver isto que dá erro
 		}else{
 			if( loadADDR==1 ) { //para colocar na stack o endereço
 				sprintf(operacao,"\tpushfp\n\tpushi %d\n\tpadd\n",def->var->addr);
@@ -300,7 +300,7 @@ char* pushVariavel(char* var){
 	}else{ //varaivel global
 		def = getDefinition(tabela,var,1);
 		if(def==NULL){
-			fatal_error("Variavel não defenida"); //ver isto que dá erro
+			fatal_error("Variavel não definida"); //ver isto que dá erro
 		}else{
 			if( loadADDR==1 ) { //para colocar na stack o endereço
 				sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n",def->var->addr);
@@ -323,7 +323,7 @@ char* pushArray1D(char* var, char* expCod){
 	if(makeFunction==1){ //estamos a defenir variaveis de uma função
 		def = getDefinition(tabelaFuntion,var,1);
 		if(def==NULL){
-			fatal_error("Variavel não defenida");
+			fatal_error("Variavel não definida");
 		}else{
 			if(loadADDR==1){
 				sprintf(operacao,"\tpushfp\n\tpushi %d\n\tpadd\n%s\tpadd\n",def->var->addr,expCod);
@@ -334,7 +334,7 @@ char* pushArray1D(char* var, char* expCod){
 	}else{ //varaivel global
 		def = getDefinition(tabela,var,1);
 		if(def==NULL){
-			fatal_error("Variavel não defenida");
+			fatal_error("Variavel não definida");
 		}else{
 			if(loadADDR==1){
 				sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n%s\tpadd\n",def->var->addr,expCod);
@@ -354,7 +354,7 @@ char* pushArray2D(char* var, char* expCod1, char* expCod2){
 	if(makeFunction==1){ //estamos a defenir variaveis de uma função
 		def = getDefinition(tabelaFuntion,var,1);
 		if( def==NULL ){
-			fatal_error("Variavel não defenida");
+			fatal_error("Variavel não definida");
 		}else{
 			if(loadADDR==1){
 				sprintf(operacao,"\tpushfp\n\tpushi %d\n\tpadd\n%s\tpushi %d\n\tmul\n%s\tadd\n\tpadd\n",def->var->addr,expCod1,(def->var->size/def->var->dim),expCod2);
@@ -365,7 +365,7 @@ char* pushArray2D(char* var, char* expCod1, char* expCod2){
 	}else{ //varaivel global
 		def = getDefinition(tabela,var,1);
 		if( def==NULL ){
-			fatal_error("Variavel não defenida");
+			fatal_error("Variavel não definida");
 		}else{
 			if(loadADDR==1){
 				sprintf(operacao,"\tpushgp\n\tpushi %d\n\tpadd\n%s\tpushi %d\n\tmul\n%s\tadd\n\tpadd\n",def->var->addr,expCod1,(def->var->size/def->var->dim),expCod2);
@@ -444,7 +444,7 @@ int main(int argc, char** argv) {
 		tabelaFuntion = createHashTable();
 		yyparse();
 	}else{
-		printf("Nessecita de introduzir o ficheiro de output\n");
+		printf("Necessita de introduzir o ficheiro de output\n");
 	}
 	return 0;
 }
